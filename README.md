@@ -3,7 +3,7 @@ A Protégé plugin for the DL-Learner framework
 
 ## Requirements
 
-The current plugin works only for Protégé 4.3 and newer.
+The current plugin only works with Protégé 4.3 and newer.
 
 ## Usage
  * choose a class in the class hierarchy view
