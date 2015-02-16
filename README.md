@@ -1,6 +1,10 @@
 # DL-Learner Protégé Plugin
 A Protégé plugin for the DL-Learner framework
 
+## Requirements
+
+The current plugin works only for Protégé 4.3 and newer.
+
 ## Usage
  * choose a class in the class hierarchy view
  * depending on whether you want to search for equivalent class or a super class expressions, i.e. click on the corresponding Add-button (+)
