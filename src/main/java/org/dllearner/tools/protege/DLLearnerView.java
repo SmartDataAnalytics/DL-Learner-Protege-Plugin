@@ -109,7 +109,7 @@ public class DLLearnerView extends JPanel{
 	private boolean toogled = false;
 	private SuggestClassPanelHandler sugPanelHandler;
 	private StatusBar statusBar;
-	private static final String WIKI_STRING = "<html><font size=\"3\">See <a href=\"http://dl-learner.org/wiki/ProtegePlugin\">DL-Learner plugin page</a> for an introduction.</font></html>";
+	private static final String WIKI_STRING = "<html><font size=\"3\">See <a href=\"http://dl-learner.org/community/protege-plugin/\">DL-Learner plugin page</a> for an introduction.</font></html>";
 
 	/**
 	 * The constructor for the DL-Learner tab in the class description
@@ -151,7 +151,7 @@ public class DLLearnerView extends JPanel{
 		learnerScroll.getVerticalScrollBar().setUnitIncrement(SCROLL_SPEED);
 		
 		JPanel addButtonPanel = new JPanel(new BorderLayout());
-		addButton = new JButton("<html>ADD</html>");
+		addButton = new JButton("<html>Add</html>");
 		addButton.setPreferredSize(new Dimension(70, 40));
 		addButton.setEnabled(false);
 		c.gridx = 2;

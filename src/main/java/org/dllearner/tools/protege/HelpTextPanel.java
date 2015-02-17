@@ -47,7 +47,7 @@ public class HelpTextPanel extends JTextPane{
             + " currently evaluated have length between 4 and 7. If you want to search for longer expressions, then you have to increase the maximum runtime setting (it is "
             + "set to " + view.getOptionsPanel().getMaxExecutionTimeInSeconds()
             + " seconds by default).</p>"
-            + "<p>See <a href=\"http://dl-learner.org/wiki/ProtegePlugin\">DL-Learner plugin page</a> for more details.</p></html>";
+            + "<p>See <a href=\"http://dl-learner.org/community/protege-plugin/\">DL-Learner plugin page</a> for more details.</p></html>";
 		this.setEditable(false);
 		this.setOpaque(true);
 		this.setPreferredSize(new Dimension(500, 370));
