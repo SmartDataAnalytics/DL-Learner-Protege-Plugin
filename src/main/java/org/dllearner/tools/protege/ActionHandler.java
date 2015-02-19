@@ -19,6 +19,10 @@
  */
 package org.dllearner.tools.protege;
 
+import static org.semanticweb.owlapi.model.AxiomType.DATA_PROPERTY_DOMAIN;
+import static org.semanticweb.owlapi.model.AxiomType.OBJECT_PROPERTY_DOMAIN;
+import static org.semanticweb.owlapi.model.AxiomType.OBJECT_PROPERTY_RANGE;
+
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -30,10 +34,17 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 
+import org.dllearner.core.EvaluatedAxiom;
 import org.dllearner.core.EvaluatedDescription;
+import org.dllearner.learningproblems.EvaluatedDescriptionClass;
 import org.protege.editor.core.ProtegeApplication;
 import org.protege.editor.core.ui.error.ErrorLogPanel;
 import org.protege.editor.core.ui.progress.BackgroundTask;
+import org.semanticweb.owlapi.model.AxiomType;
+import org.semanticweb.owlapi.model.OWLAxiom;
+import org.semanticweb.owlapi.model.OWLDataPropertyDomainAxiom;
+import org.semanticweb.owlapi.model.OWLObjectPropertyDomainAxiom;
+import org.semanticweb.owlapi.model.OWLObjectPropertyRangeAxiom;
 
 /**
  * This class processes input from the user.
@@ -42,6 +53,10 @@ import org.protege.editor.core.ui.progress.BackgroundTask;
  * 
  */
 public class ActionHandler implements ActionListener {
+	
+	public enum Actions {
+		LEARN, STOP
+	}
 
 
 	private boolean toggled;
@@ -51,9 +66,7 @@ public class ActionHandler implements ActionListener {
 //	private final Color colorRed = new Color(139, 0, 0);
 //	private final Color colorGreen = new Color(0, 139, 0);
 	private final DLLearnerView view;
-	private static final String HELP_BUTTON_STRING = "help";
-	private static final String ADD_BUTTON_STRING = "<html>ADD</html>";
-	private static final String ADVANCED_BUTTON_STRING = "Advanced";
+	
 	private static final String EQUIVALENT_CLASS_LEARNING_STRING = "<html>suggest equivalent class expressions</html>";
 	private static final String SUPER_CLASS_LEARNING_STRING = "<html>suggest super class expressions</html>";
 	private static JOptionPane optionPane;
@@ -83,60 +96,65 @@ public class ActionHandler implements ActionListener {
 	 *            ActionEvent
 	 */
 	public void actionPerformed(ActionEvent z) {
-
-		if (z.getActionCommand().equals(EQUIVALENT_CLASS_LEARNING_STRING)
-				|| z.getActionCommand().equals(SUPER_CLASS_LEARNING_STRING)) {
-			setLearningOptions();
-			view.showGraphicalPanel(false);
-			view.getSuggestClassPanel().getSuggestionsTable().clear();
-//			view.setBusyTaskStarted("Preparing ...");
-//			manager.initLearningProblem();
-//			manager.initLearningAlgorithm();
-//			view.setBusyTaskEnded();
-			
-			learningTask = ProtegeApplication.getBackgroundTaskManager().startTask("Learning...");
-			
-//			view.setLearningStarted();
-//			view.showHorizontalExpansionMessage(Manager.getInstance().getMinimumHorizontalExpansion(),
-//					Manager.getInstance().getMaximumHorizontalExpansion());
-//			try {
-//				Manager manager = Manager.getInstance();
-//				manager.initLearningProblem();
-//				manager.initLearningAlgorithm();
-//				Manager.getInstance().startLearning();
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-			
-			retriever = new SuggestionRetriever();
-			retriever.addPropertyChangeListener(view.getStatusBar());
-			retriever.execute();
-			
-		}
-
-		if (z.getActionCommand().equals(ADD_BUTTON_STRING)) {
-			Manager.getInstance().addAxiom(view.getSuggestClassPanel().getSelectedSuggestion());
-			String message = "<html><font size=\"3\">class expression added</font></html>";
-			view.setHintMessage(message);
-			view.setHelpButtonVisible(false);
-		}
-		if (z.toString().contains(ADVANCED_BUTTON_STRING)) {
-			if (!toggled) {
-				toggled = true;
-				view.setIconToggled(toggled);
-				view.showOptionsPanel(toggled);
-			} else {
-				toggled = false;
-				view.setIconToggled(toggled);
-				view.showOptionsPanel(toggled);
-			}
-		}
-		if (z.toString().contains(HELP_BUTTON_STRING)) {
-
+		if (z.getActionCommand().equals(Actions.LEARN.toString())) {
+			onLearn();
+		} else if (z.getActionCommand().equals(DLLearnerView.ADD_BUTTON_STRING)) {
+			onAddAxiom();
+		} else if (z.toString().contains(DLLearnerView.ADVANCED_BUTTON_STRING)) {
+			onShowAdvancedOptions();
+		} else if (z.toString().contains(DLLearnerView.HELP_BUTTON_STRING)) {
 			String currentClass = Manager.getInstance().getCurrentlySelectedClassRendered();
 			optionPane.setPreferredSize(new Dimension(300, 200));
 			JOptionPane.showMessageDialog(view.getLearnerView(), helpPanel.renderHelpTextMessage(currentClass), "Help",
 					JOptionPane.INFORMATION_MESSAGE);
+		}
+	}
+	
+	private void onLearn() {
+		setLearningOptions();
+		view.showGraphicalPanel(false);
+		view.getSuggestClassPanel().getSuggestionsTable().clear();
+//		view.setBusyTaskStarted("Preparing ...");
+//		manager.initLearningProblem();
+//		manager.initLearningAlgorithm();
+//		view.setBusyTaskEnded();
+		
+		learningTask = ProtegeApplication.getBackgroundTaskManager().startTask("Learning...");
+		
+//		view.setLearningStarted();
+//		view.showHorizontalExpansionMessage(Manager.getInstance().getMinimumHorizontalExpansion(),
+//				Manager.getInstance().getMaximumHorizontalExpansion());
+//		try {
+//			Manager manager = Manager.getInstance();
+//			manager.initLearningProblem();
+//			manager.initLearningAlgorithm();
+//			Manager.getInstance().startLearning();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+		
+		retriever = new SuggestionRetriever();
+		retriever.addPropertyChangeListener(view.getStatusBar());
+		retriever.execute();
+	}
+	
+	private void onAddAxiom() {
+		EvaluatedDescription selectedSuggestion = view.getSuggestClassPanel().getSelectedSuggestion();
+		Manager.getInstance().addAxiom(selectedSuggestion);
+		String message = "<html><font size=\"3\">class expression added</font></html>";
+		view.setHintMessage(message);
+		view.setHelpButtonVisible(false);
+	}
+	
+	private void onShowAdvancedOptions() {
+		if (!toggled) {
+			toggled = true;
+			view.setIconToggled(toggled);
+			view.showOptionsPanel(toggled);
+		} else {
+			toggled = false;
+			view.setIconToggled(toggled);
+			view.showOptionsPanel(toggled);
 		}
 	}
 
@@ -146,7 +164,6 @@ public class ActionHandler implements ActionListener {
 	public void resetToggled() {
 		toggled = false;
 	}
-
 	
 	private void setLearningOptions(){
 		OptionPanel options = view.getOptionsPanel();
@@ -162,7 +179,7 @@ public class ActionHandler implements ActionListener {
 	}
 
 	/**
-	 * Inner Class that retrieves the concepts given by the DL-Learner.
+	 * Inner Class that retrieves the concepts learned by DL-Learner.
 	 * 
 	 * @author Christian Koetteritzsch
 	 * 
@@ -173,9 +190,8 @@ public class ActionHandler implements ActionListener {
 
 		@SuppressWarnings("unchecked")
 		@Override
-		protected List<? extends EvaluatedDescription> doInBackground()
+		protected List<EvaluatedDescription> doInBackground()
 				throws Exception {
-			
 			SwingUtilities.invokeLater(new Runnable() {
 				@Override
 				public void run() {
@@ -185,41 +201,46 @@ public class ActionHandler implements ActionListener {
 			
 			try {
 				Manager manager = Manager.getInstance();
-				manager.initLearningProblem();
-				manager.initLearningAlgorithm();
-				
-				view.setBusyTaskEnded();
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						view.setLearningStarted();
-						view.showHorizontalExpansionMessage(Manager.getInstance().getMinimumHorizontalExpansion(),
-								Manager.getInstance().getMaximumHorizontalExpansion());
-					}
-				});
-				
 				timer = new Timer();
-				timer.schedule(new TimerTask(){
-					int progress = 0;
-					List<? extends EvaluatedDescription> result;
-					@Override
-					public void run() {
-						progress++;
-						setProgress(progress);
-						if(!isCancelled() && Manager.getInstance().isLearning()){
-							result = Manager.getInstance().getCurrentlyLearnedDescriptions();
-							publish(result);
-						}
-					}
+				if(view.getAxiomType().equals(AxiomType.EQUIVALENT_CLASSES) || view.getAxiomType().equals(AxiomType.SUBCLASS_OF)) {
+					manager.initLearningProblem();
+					manager.initLearningAlgorithm();
 					
-				}, 1000, 500);
-				Manager.getInstance().startLearning();
+					view.setBusyTaskEnded();
+					SwingUtilities.invokeLater(new Runnable() {
+						@Override
+						public void run() {
+							view.setLearningStarted();
+							view.showHorizontalExpansionMessage(Manager.getInstance().getMinimumHorizontalExpansion(),
+									Manager.getInstance().getMaximumHorizontalExpansion());
+						}
+					});
+					
+					
+					timer.schedule(new TimerTask(){
+						int progress = 0;
+						List<EvaluatedDescriptionClass> result;
+						@Override
+						public void run() {
+							progress++;
+							setProgress(progress);
+							if(!isCancelled() && Manager.getInstance().isLearning()){
+								result = Manager.getInstance().getCurrentlyLearnedDescriptions();
+								publish(result);
+							}
+						}
+						
+					}, 1000, 500);
+					Manager.getInstance().startLearning();
+				} else {
+					List<EvaluatedAxiom<OWLAxiom>> axioms = manager.computeAxioms(view.getEntity(), view.getAxiomType());
+					view.showAxioms(axioms);
+				}
 			} catch (Exception e) {
 				ErrorLogPanel.showErrorDialog(e);
 				cancel(true);
 				view.setBusyTaskEnded();
 			}
-			
 			
 			return null;
 		}
@@ -228,10 +249,13 @@ public class ActionHandler implements ActionListener {
 		public void done() {
 			if(!isCancelled()){
 				timer.cancel();
-				List<? extends EvaluatedDescription> result = Manager.getInstance().getCurrentlyLearnedDescriptions();
-				updateList(result);
-				setProgress(0);
+				if(view.getAxiomType().equals(AxiomType.EQUIVALENT_CLASSES) || view.getAxiomType().equals(AxiomType.SUBCLASS_OF)) {
+					List<EvaluatedDescriptionClass> result = Manager.getInstance().getCurrentlyLearnedDescriptions();
+					updateList(result);
+					
+				}
 				view.setLearningFinished();
+				setProgress(0);
 			}
 			ProtegeApplication.getBackgroundTaskManager().endTask(learningTask);
 		}
@@ -247,7 +271,6 @@ public class ActionHandler implements ActionListener {
 			view.setSuggestions(result);
 			view.showHorizontalExpansionMessage(Manager.getInstance().getMinimumHorizontalExpansion(),
 					Manager.getInstance().getMaximumHorizontalExpansion());
-
 		}
 	}
 	

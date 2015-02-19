@@ -7,26 +7,24 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.table.AbstractTableModel;
 
+import org.dllearner.core.EvaluatedDescription;
 import org.dllearner.learningproblems.EvaluatedDescriptionClass;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 
 public class SuggestionsTableModel extends AbstractTableModel {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -6920806148989403795L;
 	
-	private List<EvaluatedDescriptionClass> suggestionList;
+	private List<EvaluatedDescription> suggestionList;
 	private final Icon inconsistentIcon = new ImageIcon(this.getClass().getResource("warning-icon.png"));
 	private final Icon followsIcon = new ModelsIcon();
 	
 	public SuggestionsTableModel(){
 		super();
-		suggestionList = new ArrayList<EvaluatedDescriptionClass>();
+		suggestionList = new ArrayList<EvaluatedDescription>();
 	}
 	
-	public SuggestionsTableModel(List<EvaluatedDescriptionClass> suggestionList){
+	public SuggestionsTableModel(List<EvaluatedDescription> suggestionList){
 		this.suggestionList = suggestionList;
 	}
 
@@ -42,21 +40,23 @@ public class SuggestionsTableModel extends AbstractTableModel {
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
+		EvaluatedDescription suggestion = suggestionList.get(rowIndex);
 		switch (columnIndex) {
 		case 0:
-			return (int) (suggestionList.get(rowIndex).getAccuracy() * 100);
+			return (int) (suggestion.getAccuracy() * 100);
 		case 1:
 			if(DLLearnerPreferences.getInstance().isCheckConsistencyWhileLearning()){
-				if (!suggestionList.get(rowIndex).isConsistent()) {
+				if (suggestion instanceof EvaluatedDescriptionClass && 
+						!((EvaluatedDescriptionClass)suggestion).isConsistent()) {
 					return inconsistentIcon;
 				} 
 			}
-			if(suggestionList.get(rowIndex).followsFromKB()){
+			if(suggestion instanceof EvaluatedDescriptionClass && ((EvaluatedDescriptionClass)suggestion).followsFromKB()){
 				return followsIcon;
 			}
 			break;
 		case 2:
-			return suggestionList.get(rowIndex).getDescription();
+			return suggestion.getDescription();
 		}
 		return null;
 
@@ -85,7 +85,7 @@ public class SuggestionsTableModel extends AbstractTableModel {
 		}
 	}
 	
-	public EvaluatedDescriptionClass getEntryAtRow(int row){
+	public EvaluatedDescription getEntryAtRow(int row){
 		if(suggestionList.size() >= row){
 			return suggestionList.get(row);
 		} else {
@@ -98,17 +98,17 @@ public class SuggestionsTableModel extends AbstractTableModel {
 		fireTableDataChanged();
 	}
 	
-	public void setSuggestions(List<EvaluatedDescriptionClass> suggestionList){
+	public void setSuggestions(List<? extends EvaluatedDescription> suggestionList){
 		this.suggestionList.clear();
 		this.suggestionList.addAll(suggestionList);
 		fireTableDataChanged();
 	}
 	
-	public EvaluatedDescriptionClass getSelectedValue(int rowIndex){
+	public EvaluatedDescription getSelectedValue(int rowIndex){
 		return suggestionList.get(rowIndex);
 	}
 	
-	public int getSelectionIndex(EvaluatedDescriptionClass e){
+	public int getSelectionIndex(EvaluatedDescription e){
 		return suggestionList.indexOf(e);
 	}
 

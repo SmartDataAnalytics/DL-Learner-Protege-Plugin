@@ -19,6 +19,12 @@
  */
 package org.dllearner.tools.protege;
 
+import static org.semanticweb.owlapi.model.AxiomType.DATA_PROPERTY_DOMAIN;
+import static org.semanticweb.owlapi.model.AxiomType.EQUIVALENT_CLASSES;
+import static org.semanticweb.owlapi.model.AxiomType.OBJECT_PROPERTY_DOMAIN;
+import static org.semanticweb.owlapi.model.AxiomType.OBJECT_PROPERTY_RANGE;
+import static org.semanticweb.owlapi.model.AxiomType.SUBCLASS_OF;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -28,6 +34,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionListener;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -39,8 +46,16 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.JToggleButton;
 
+import org.dllearner.core.EvaluatedAxiom;
 import org.dllearner.core.EvaluatedDescription;
+import org.dllearner.tools.protege.ActionHandler.Actions;
 import org.protege.editor.owl.OWLEditorKit;
+import org.semanticweb.owlapi.model.AxiomType;
+import org.semanticweb.owlapi.model.OWLAxiom;
+import org.semanticweb.owlapi.model.OWLDataPropertyDomainAxiom;
+import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.OWLObjectPropertyDomainAxiom;
+import org.semanticweb.owlapi.model.OWLObjectPropertyRangeAxiom;
 /**
  * This class is responsible for the view of the dllearner. It renders the
  * output for the user and is the graphical component of the plugin.
@@ -109,16 +124,21 @@ public class DLLearnerView extends JPanel{
 	private boolean toogled = false;
 	private SuggestClassPanelHandler sugPanelHandler;
 	private StatusBar statusBar;
+	
+	public static final String HELP_BUTTON_STRING = "help";
+	public static final String ADD_BUTTON_STRING = "<html>Add</html>";
+	public static final String ADVANCED_BUTTON_STRING = "Advanced";
 	private static final String WIKI_STRING = "<html><font size=\"3\">See <a href=\"http://dl-learner.org/community/protege-plugin/\">DL-Learner plugin page</a> for an introduction.</font></html>";
+	private AxiomType axiomType;
+	private String topicLabel;
+	private OWLEntity entity;
 
-	/**
-	 * The constructor for the DL-Learner tab in the class description
-	 * editor.
-	 * 
-	 * @param editor OWLEditorKit
-	 */
-	public DLLearnerView(OWLEditorKit editor) {
-		editorKit = editor;
+
+	public DLLearnerView(OWLEditorKit editorKit, OWLEntity entity, AxiomType axiomType) {
+		this.editorKit = editorKit;
+		this.entity = entity;
+		this.axiomType = axiomType;
+		
 		createUI();
 	}
 	
@@ -273,13 +293,23 @@ public class DLLearnerView extends JPanel{
 	}
 	
 	public void reset(){
-		String learningType = "";
-		if(Manager.getInstance().getLearningType() == LearningType.EQUIVALENT){
-			learningType = "equivalent class";
-		} else {
-			learningType = "super class";
+		// get the topic this view is 'talinking' about
+		topicLabel = null;
+		if(axiomType.equals(EQUIVALENT_CLASSES)) {
+			topicLabel = "equivalent class expressions";
+		} else if(axiomType.equals(SUBCLASS_OF)) {
+			topicLabel = "superclass expressions";
+		} else if(axiomType.equals(OBJECT_PROPERTY_DOMAIN)) {
+			topicLabel = "object property domains";
+		} else if(axiomType.equals(OBJECT_PROPERTY_RANGE)) {
+			topicLabel = "object property ranges";
+		} else if(axiomType.equals(DATA_PROPERTY_DOMAIN)) {
+			topicLabel = "data property domains";
 		}
-		runButton.setText("<html>suggest " + learningType + " expressions</html>");
+		
+		// update label of run button
+		runButton.setText("<html>suggest " + topicLabel + "</html>");
+		runButton.setActionCommand(Actions.LEARN.toString());
 		sugPanel.getSuggestionsTable().clear();
 		showGraphicalPanel(false);
 		setHintMessage("");
@@ -307,6 +337,20 @@ public class DLLearnerView extends JPanel{
 //			learnerPanel.setPreferredSize(new Dimension(WIDTH, HEIGHT));
 //			learnerScroll.setPreferredSize(new Dimension(SCROLL_WIDTH, SCROLL_HEIGHT));
 		}
+	}
+	
+	/**
+	 * @return the axiomType
+	 */
+	public AxiomType getAxiomType() {
+		return axiomType;
+	}
+	
+	/**
+	 * @return the entity
+	 */
+	public OWLEntity getEntity() {
+		return entity;
 	}
 	
 	/**
@@ -388,14 +432,14 @@ public class DLLearnerView extends JPanel{
 	
 	public void setLearningEnabled(){
 		runButton.setEnabled(true);
-		setHintMessage("<html><font size=\"3\">To get suggestions for class descriptions," +
+		setHintMessage("<html><font size=\"3\">To get suggestions for " + topicLabel + "," +
 				" please click the button above.</font></html>");
 	}
 	
 	public void showNoInstancesMessage() {
-		String message = "<html><font size=\"3\" color=\"red\">There are no instances for "
-				+ Manager.getInstance().getCurrentlySelectedClassRendered()
-				+ " available. Please insert some instances.</font></html>";
+		String message = "<html><font size=\"3\" color=\"red\">There is no instance data for "
+				+ editorKit.getModelManager().getRendering(entity)
+				+ " available. Please insert some data first.</font></html>";
 		setHintMessage(message);
 	}
 	
@@ -444,11 +488,14 @@ public class DLLearnerView extends JPanel{
 	 */
 	public void showAlgorithmTerminatedMessage() {
 		this.showStatusBar(false);
-		String message = "<html><font size=\"3\" color=\"black\">Learning successful. All expressions up to length "
-			+ (Manager.getInstance().getMinimumHorizontalExpansion()-1) + 
-			" and some expressions up to <br>length "
-			+ Manager.getInstance().getMaximumHorizontalExpansion() 
-			+ " searched.";
+		String message = "<html><font size=\"3\" color=\"black\">Learning successful.";
+		if(axiomType.equals(EQUIVALENT_CLASSES) || axiomType.equals(SUBCLASS_OF)) {
+			message += "All expressions up to length "
+					+ (Manager.getInstance().getMinimumHorizontalExpansion()-1) + 
+					" and some expressions up to <br>length "
+					+ Manager.getInstance().getMaximumHorizontalExpansion() 
+					+ " searched.";
+		}
 		hint.setForeground(Color.RED);
 		if(isInconsistent) {
 			message +="<font size=\"3\" color=\"red\"><br>Class expressions marked red will lead to an inconsistent ontology. <br>Please click on them to view detail information.</font></html>";
@@ -544,6 +591,30 @@ public class DLLearnerView extends JPanel{
 	
 	public void setSuggestions(List<? extends EvaluatedDescription> suggestions){
 		sugPanel.setSuggestions(suggestions);
+	}
+	
+	public void showAxioms(List<EvaluatedAxiom<OWLAxiom>> evaluatedAxioms){
+		// currently we just convert axioms to descriptions
+		List<EvaluatedDescription> evaluatedDescriptions = new ArrayList<EvaluatedDescription>(evaluatedAxioms.size());
+		for (EvaluatedAxiom<OWLAxiom> evaluatedAxiom : evaluatedAxioms) {
+			if(axiomType.equals(OBJECT_PROPERTY_DOMAIN)) {
+				evaluatedDescriptions.add(
+						new EvaluatedDescription(
+								((OWLObjectPropertyDomainAxiom)evaluatedAxiom.getAxiom()).getDomain(), 
+								evaluatedAxiom.getScore()));
+			} else if(axiomType.equals(OBJECT_PROPERTY_RANGE)) {
+				evaluatedDescriptions.add(
+						new EvaluatedDescription(
+								((OWLObjectPropertyRangeAxiom)evaluatedAxiom.getAxiom()).getRange(), 
+								evaluatedAxiom.getScore()));
+			} else if(axiomType.equals(DATA_PROPERTY_DOMAIN)) {
+				evaluatedDescriptions.add(
+						new EvaluatedDescription(
+								((OWLDataPropertyDomainAxiom)evaluatedAxiom.getAxiom()).getDomain(), 
+								evaluatedAxiom.getScore()));
+			}
+		}
+		sugPanel.setSuggestions(evaluatedDescriptions);
 	}
 	
 }

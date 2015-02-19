@@ -37,7 +37,7 @@ import org.semanticweb.owlapi.model.OWLClassExpression;
 
 /**
  * This is the class that must be implemented to get the plugin integrated in
- * protege.
+ * Protégé.
  * 
  * @author Christian Koetteritzsch
  * 
@@ -78,8 +78,11 @@ public class ProtegePlugin extends AbstractOWLClassExpressionEditor implements O
             	message = "The loaded ontology is inconsistent. Learning is only supported for consistent ontologies.";
             	enable = false;
             }
+        } else if(status == ReasonerStatus.OUT_OF_SYNC){
+        	message = "You have to synchronize the reasoner first(click on menu \"Reasoner\"->\"Synchronize reasoner\").";
+        	enable = false;
         } else {
-        	message = "You have to select a reasoner (click on menu \"Reasoner\"). We recommend to use Pellet.";
+        	message = "You have to select a reasoner first(click on menu \"Reasoner\"). ";
         	enable = false;
         }
         view.setHintMessage("<html><font size=\"3\" color=\"red\">" + message + "</font></html>");
@@ -92,16 +95,25 @@ public class ProtegePlugin extends AbstractOWLClassExpressionEditor implements O
 	}
 
 	@Override
-	public boolean setDescription(OWLClassExpression arg0) {
+	public boolean setDescription(OWLClassExpression ce) {
 		return true;
 	}
 
 	@Override
 	public void initialise() throws Exception {
-		Manager.getInstance(getOWLEditorKit());
-		view = new DLLearnerView(super.getOWLEditorKit());
-		Manager.getInstance().setProgressMonitor(view.getStatusBar());
 		System.out.println("Initializing DL-Learner plugin...");
+		
+		Manager.getInstance(getOWLEditorKit());
+		
+		view = new DLLearnerView(getOWLEditorKit(), 
+				getOWLEditorKit().getOWLWorkspace().getOWLSelectionModel().getSelectedEntity(), 
+				getAxiomType());
+		
+		Manager manager = Manager.getInstance();
+		manager.setProgressMonitor(view.getStatusBar());
+		manager.setEntity(getOWLEditorKit().getOWLWorkspace().getOWLSelectionModel().getSelectedEntity());
+		manager.setAxiomType(getAxiomType());
+		
 		addListeners();
 	}
 

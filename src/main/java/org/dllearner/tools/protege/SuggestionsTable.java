@@ -4,6 +4,7 @@ import java.awt.event.MouseEvent;
 import java.util.Comparator;
 import java.util.List;
 
+import org.dllearner.core.EvaluatedDescription;
 import org.dllearner.learningproblems.EvaluatedDescriptionClass;
 import org.jdesktop.swingx.JXTable;
 import org.protege.editor.owl.OWLEditorKit;
@@ -11,14 +12,11 @@ import org.protege.editor.owl.ui.renderer.OWLCellRenderer;
 
 public class SuggestionsTable extends JXTable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -497294373160119210L;
 	
 	private final OWLCellRenderer owlRenderer;
 	private final ProgressBarTableCellRenderer progressRenderer;
-	private EvaluatedDescriptionClass old;
+	private EvaluatedDescription old;
 	
 	public SuggestionsTable(OWLEditorKit editorKit){
 		super(new SuggestionsTableModel());
@@ -57,7 +55,7 @@ public class SuggestionsTable extends JXTable {
 		((SuggestionsTableModel)getModel()).clear();
 	}
 	
-	public void setSuggestions(List<EvaluatedDescriptionClass> suggestionList){
+	public void setSuggestions(List<? extends EvaluatedDescription> suggestionList){
 		if(getSelectedRow() >= 0){
 			old = getSelectedSuggestion();
 		}
@@ -70,7 +68,7 @@ public class SuggestionsTable extends JXTable {
 		}
 	}
 	
-	public EvaluatedDescriptionClass getSelectedSuggestion(){	
+	public EvaluatedDescription getSelectedSuggestion(){	
 		return ((SuggestionsTableModel)getModel()).getSelectedValue(getSelectedRow());
 	}
 	
@@ -79,12 +77,12 @@ public class SuggestionsTable extends JXTable {
 		int column = columnAtPoint(event.getPoint());
 		int row = rowAtPoint(event.getPoint());
 		if(column == 1 && row != -1){
-			EvaluatedDescriptionClass ec = ((SuggestionsTableModel)getModel()).getEntryAtRow(row);
+			EvaluatedDescription ec = ((SuggestionsTableModel)getModel()).getEntryAtRow(row);
 			String text = null;
-			if(ec.followsFromKB()){
+			if(ec instanceof EvaluatedDescriptionClass && ((EvaluatedDescriptionClass)ec).followsFromKB()){
 				text = "This axiom follows implicitly from knowledge base!";
-			} else if(DLLearnerPreferences.getInstance().isCheckConsistencyWhileLearning() && !ec.isConsistent()){
-				text = "Adding this axiom may laed to an inconsistent knowlegde base!";
+			} else if(DLLearnerPreferences.getInstance().isCheckConsistencyWhileLearning() && !((EvaluatedDescriptionClass)ec).isConsistent()){
+				text = "Adding this axiom may lead to an inconsistent knowledge base!";
 			} 
 			return text;
 		}

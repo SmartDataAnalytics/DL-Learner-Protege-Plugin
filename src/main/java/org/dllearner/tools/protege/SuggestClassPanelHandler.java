@@ -23,6 +23,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.dllearner.core.EvaluatedDescription;
+import org.semanticweb.owlapi.model.AxiomType;
 /**
  * This is the MouseListener for the Suggest Panel.
  * @author Christian Koetteritzsch
@@ -42,21 +43,22 @@ public class SuggestClassPanelHandler implements  ListSelectionListener{
 	}
 
 	@Override
-	/**
-	 * Nothing happens here. 
-	 */
 	public void valueChanged(ListSelectionEvent e) {
 		if(view.getSuggestClassPanel().getSuggestionsTable().getSelectedRow() >= 0){
-			EvaluatedDescription newDesc = view.getSuggestClassPanel().getSuggestionsTable().getSelectedSuggestion();
-//			evaluatedDescription = view.getSuggestClassPanel().getSuggestionsTable().getSelectedSuggestion();
-			if(!e.getValueIsAdjusting() && (evaluatedDescription == null || !evaluatedDescription.equals(newDesc))){
-				evaluatedDescription = newDesc;
-//				view.getMoreDetailForSuggestedConceptsPanel().renderDetailPanel(evaluatedDescription);
-				view.showHintMessagePanel(false);
-				view.showGraphicalPanel(true);
-				view.getGraphicalPanel().setDescription(evaluatedDescription);
-				view.getAddButton().setEnabled(true);
+			if(view.getAxiomType().equals(AxiomType.EQUIVALENT_CLASSES) || 
+					view.getAxiomType().equals(AxiomType.SUBCLASS_OF)) {
+				EvaluatedDescription newDesc = view.getSuggestClassPanel().getSuggestionsTable().getSelectedSuggestion();
+//				evaluatedDescription = view.getSuggestClassPanel().getSuggestionsTable().getSelectedSuggestion();
+				if(!e.getValueIsAdjusting() && (evaluatedDescription == null || !evaluatedDescription.equals(newDesc))){
+					evaluatedDescription = newDesc;
+//					view.getMoreDetailForSuggestedConceptsPanel().renderDetailPanel(evaluatedDescription);
+					view.showHintMessagePanel(false);
+					view.showGraphicalPanel(true);
+					view.getGraphicalPanel().setDescription(evaluatedDescription);
+					view.getAddButton().setEnabled(true);
+				}
 			}
+			
 		}
 		
 		
