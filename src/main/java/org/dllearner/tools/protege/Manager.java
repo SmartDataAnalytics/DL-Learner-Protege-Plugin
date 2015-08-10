@@ -26,6 +26,7 @@ import org.dllearner.learningproblems.EvaluatedDescriptionClass;
 import org.dllearner.reasoning.ClosedWorldReasoner;
 import org.dllearner.reasoning.OWLAPIReasoner;
 import org.dllearner.refinementoperators.RhoDRDown;
+import org.dllearner.utilities.OWLAPIUtils;
 import org.dllearner.utilities.OwlApiJenaUtils;
 import org.protege.editor.core.Disposable;
 import org.protege.editor.owl.OWLEditorKit;
@@ -37,6 +38,7 @@ import org.semanticweb.owlapi.model.AddAxiom;
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLIndividual;
@@ -130,7 +132,7 @@ public class Manager implements OWLModelManagerListener, OWLSelectionModelListen
 	public List<EvaluatedAxiom<OWLAxiom>> computeAxioms(OWLEntity entity, AxiomType axiomType) {
 		System.out.print("Started learning of " + 
 				axiomType.getName() + " axioms for " + 
-				AbstractAxiomLearningAlgorithm.getPrintName(entity.getEntityType()) 
+				OWLAPIUtils.getPrintName(entity.getEntityType()) 
 				+ " " + editorKit.getOWLModelManager().getRendering(entity) + "...");
 		
 		try {
@@ -254,7 +256,7 @@ public class Manager implements OWLModelManagerListener, OWLSelectionModelListen
 		editorKit.getOWLModelManager().applyChange(new AddAxiom(ontology, axiom));
 	}
 	
-	public void addAxiom(EvaluatedDescription evaluatedDescription){
+	public void addAxiom(EvaluatedDescription<? extends OWLClassExpression> evaluatedDescription){
 		OWLClass selectedClass = editorKit.getOWLWorkspace().getOWLSelectionModel().getLastSelectedClass();
 		
 		OWLDataFactory df = editorKit.getOWLModelManager().getOWLDataFactory();
@@ -277,9 +279,10 @@ public class Manager implements OWLModelManagerListener, OWLSelectionModelListen
 	}
 	
 	public void startLearning(){
+		reasoner.resetStatistics();
 		System.out.print("Started learning of " + 
 				axiomType.getName() + " axioms for " + 
-				AbstractAxiomLearningAlgorithm.getPrintName(entity.getEntityType()) 
+				OWLAPIUtils.getPrintName(entity.getEntityType()) 
 				+ " " + editorKit.getOWLModelManager().getRendering(entity) + "...");
 		try {
 			la.start();

@@ -24,6 +24,7 @@ import java.util.Set;
 
 import javax.swing.JComponent;
 
+import org.dllearner.utilities.owl.DLSyntaxObjectRenderer;
 import org.protege.editor.core.ui.util.InputVerificationStatusChangedListener;
 import org.protege.editor.owl.model.event.EventType;
 import org.protege.editor.owl.model.event.OWLModelManagerChangeEvent;
@@ -31,6 +32,7 @@ import org.protege.editor.owl.model.event.OWLModelManagerListener;
 import org.protege.editor.owl.model.inference.OWLReasonerManager;
 import org.protege.editor.owl.model.inference.ReasonerStatus;
 import org.protege.editor.owl.ui.editor.AbstractOWLClassExpressionEditor;
+import org.semanticweb.owlapi.io.ToStringRenderer;
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassExpression;
@@ -115,6 +117,8 @@ public class ProtegePlugin extends AbstractOWLClassExpressionEditor implements O
 		manager.setAxiomType(getAxiomType());
 		
 		addListeners();
+		
+		ToStringRenderer.getInstance().setRenderer(new DLSyntaxObjectRenderer());
 	}
 
 	@Override
@@ -142,6 +146,7 @@ public class ProtegePlugin extends AbstractOWLClassExpressionEditor implements O
 	}
 	
 	private void removeListeners(){
+		getOWLEditorKit().getOWLModelManager().removeListener(this);
 		getOWLEditorKit().getOWLModelManager().removeListener(Manager.getInstance(getOWLEditorKit()));
 		getOWLEditorKit().getOWLWorkspace().getOWLSelectionModel().removeListener(Manager.getInstance(getOWLEditorKit()));
 	}

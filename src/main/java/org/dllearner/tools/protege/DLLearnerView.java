@@ -174,6 +174,7 @@ public class DLLearnerView extends JPanel{
 		addButton = new JButton("<html>Add</html>");
 		addButton.setPreferredSize(new Dimension(70, 40));
 		addButton.setEnabled(false);
+		addButton.setToolTipText("Add selected class expressions to current ontology.");
 		c.gridx = 2;
 		c.gridy = 1;
 		c.weightx = 0.0;
@@ -186,6 +187,7 @@ public class DLLearnerView extends JPanel{
 		runButton = new JButton();
 		runButton.setPreferredSize(new Dimension(260, 30));
 		runButton.setEnabled(false);
+		runButton.setToolTipText("Start the learning algorithm.");
 		runButtonPanel.add(BorderLayout.WEST, runButton);
 		wikiPane = new JTextPane();
 		wikiPane.setContentType("text/html");
@@ -488,7 +490,7 @@ public class DLLearnerView extends JPanel{
 	 */
 	public void showAlgorithmTerminatedMessage() {
 		this.showStatusBar(false);
-		String message = "<html><font size=\"3\" color=\"black\">Learning successful.";
+		String message = "<html><font size=\"3\" color=\"black\">Learning successful. ";
 		if(axiomType.equals(EQUIVALENT_CLASSES) || axiomType.equals(SUBCLASS_OF)) {
 			message += "All expressions up to length "
 					+ (Manager.getInstance().getMinimumHorizontalExpansion()-1) + 

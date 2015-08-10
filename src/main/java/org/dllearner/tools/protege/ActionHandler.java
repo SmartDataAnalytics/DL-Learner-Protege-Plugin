@@ -217,20 +217,20 @@ public class ActionHandler implements ActionListener {
 					});
 					
 					
-					timer.schedule(new TimerTask(){
-						int progress = 0;
-						List<EvaluatedDescriptionClass> result;
-						@Override
-						public void run() {
-							progress++;
-							setProgress(progress);
-							if(!isCancelled() && Manager.getInstance().isLearning()){
-								result = Manager.getInstance().getCurrentlyLearnedDescriptions();
-								publish(result);
-							}
-						}
-						
-					}, 1000, 500);
+//					timer.schedule(new TimerTask(){
+//						int progress = 0;
+//						List<EvaluatedDescriptionClass> result;
+//						@Override
+//						public void run() {
+//							progress++;
+//							setProgress(progress);
+//							if(!isCancelled() && Manager.getInstance().isLearning()){
+//								result = Manager.getInstance().getCurrentlyLearnedDescriptions();
+//								publish(result);
+//							}
+//						}
+//						
+//					}, 1000, 500);
 					Manager.getInstance().startLearning();
 				} else {
 					List<EvaluatedAxiom<OWLAxiom>> axioms = manager.computeAxioms(view.getEntity(), view.getAxiomType());

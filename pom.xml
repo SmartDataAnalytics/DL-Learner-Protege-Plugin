@@ -18,7 +18,7 @@
 		<dependency>
 			<groupId>org.dllearner</groupId>
 			<artifactId>components-core</artifactId>
-			<version>1.0</version>
+			<version>1.1</version>
 		</dependency>
 		
 		<dependency>
@@ -117,6 +117,12 @@
 			<version>1.7.7</version>
 		</dependency>
 		
+		<dependency>
+				<groupId>com.clarkparsia.pellet</groupId>
+				<artifactId>pellet-owlapiv3</artifactId>
+				<version>2.3.3-dllearner</version>
+		</dependency>
+		
 	</dependencies>
 
 	<build>
@@ -160,14 +166,16 @@
  editor.core.ui.progress;version="[4.3,6)",org.protege.editor.core.ui.util;version="[4.3,6)",
  org.semanticweb.owlapi.apibinding;version="[3.4,4)",org.semanticweb.owlapi.io;version="[3.4,4)",
  org.semanticweb.owlapi.model;version="[3.4,4)",
- org.semanticweb.owlapi.profiles;version="[3.4,4)",org.semanticweb.owlapi.reasoner;version="[3.4,4)",
+ org.semanticweb.owlapi.profiles;version="[3.4,4)",org.semanticweb.owlapi.reasoner;version="[3.4,4)",org.semanticweb.owlapi.expression;version="[3.4,4)",
  org.semanticweb.owlapi.util;version="[3.4,4)",org.semanticweb.owlapi.vocab;version="[3.4,4)",
  uk.ac.manchester.cs.owl.owlapi;version="[3.4,4)",
- uk.ac.manchester.cs.owl.owlapi.mansyntaxrenderer;version="[3.4,4)",uk.ac.manchester.cs.owlapi.dlsyntax;version="[3.4,4)"
+ uk.ac.manchester.cs.owl.owlapi.mansyntaxrenderer;version="[3.4,4)",uk.ac.manchester.cs.owlapi.dlsyntax;version="[3.4,4)",
+ 
+ 
 						</Import-Package>
 						
 						<!-- embed all compile and runtime scope dependencies -->
-						<Embed-Dependency>components-core,swingx,guava,log4j,joda-time,jamon,
+						<Embed-Dependency>components-core,swingx,guava,log4j,joda-time,jamon,pellet-owlapiv3,
 						json,owlapi-api,slf4j-api,slf4j-simple,
 						jena-arq,jena-core,jena-iri,jena-sparql-api-core,jena-sparql-api-cache-h2,xercesImpl;scope=compile|runtime</Embed-Dependency>
 						<Embed-Directory>lib</Embed-Directory>

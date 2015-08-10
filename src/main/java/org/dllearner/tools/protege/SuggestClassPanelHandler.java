@@ -33,11 +33,6 @@ public class SuggestClassPanelHandler implements  ListSelectionListener{
 	private DLLearnerView view;
 	private EvaluatedDescription evaluatedDescription;
 	
-	/**
-	 * This is the constructor for the SuggestClassPanelHandler.
-	 * @param v DLLearnerView
-	 * @param m DLLearnerModel
-	 */
 	public SuggestClassPanelHandler(DLLearnerView v) {
 		this.view = v;
 	}
