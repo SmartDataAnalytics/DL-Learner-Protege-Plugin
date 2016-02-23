@@ -58,7 +58,6 @@ public class ActionHandler implements ActionListener {
 		LEARN, STOP
 	}
 
-
 	private boolean toggled;
 	private Timer timer;
 	private SuggestionRetriever retriever;
@@ -76,10 +75,8 @@ public class ActionHandler implements ActionListener {
 	/**
 	 * This is the constructor for the action handler.
 	 * 
-	 * @param m
-	 *            DLLearnerModel
 	 * @param view
-	 *            DLlearner tab
+	 *            DL-Learner tab
 	 * 
 	 */
 	public ActionHandler(DLLearnerView view) {
@@ -92,17 +89,17 @@ public class ActionHandler implements ActionListener {
 	/**
 	 * When a Button is pressed this method select the right.
 	 * 
-	 * @param z
+	 * @param e
 	 *            ActionEvent
 	 */
-	public void actionPerformed(ActionEvent z) {
-		if (z.getActionCommand().equals(Actions.LEARN.toString())) {
+	public void actionPerformed(ActionEvent e) {
+		if (e.getActionCommand().equals(Actions.LEARN.toString())) {
 			onLearn();
-		} else if (z.getActionCommand().equals(DLLearnerView.ADD_BUTTON_STRING)) {
+		} else if (e.getActionCommand().equals(DLLearnerView.ADD_BUTTON_STRING)) {
 			onAddAxiom();
-		} else if (z.toString().contains(DLLearnerView.ADVANCED_BUTTON_STRING)) {
+		} else if (e.toString().contains(DLLearnerView.ADVANCED_BUTTON_STRING)) {
 			onShowAdvancedOptions();
-		} else if (z.toString().contains(DLLearnerView.HELP_BUTTON_STRING)) {
+		} else if (e.toString().contains(DLLearnerView.HELP_BUTTON_STRING)) {
 			String currentClass = Manager.getInstance().getCurrentlySelectedClassRendered();
 			optionPane.setPreferredSize(new Dimension(300, 200));
 			JOptionPane.showMessageDialog(view.getLearnerView(), helpPanel.renderHelpTextMessage(currentClass), "Help",
@@ -190,23 +187,29 @@ public class ActionHandler implements ActionListener {
 
 		@SuppressWarnings("unchecked")
 		@Override
-		protected List<EvaluatedDescription> doInBackground()
-				throws Exception {
-			SwingUtilities.invokeLater(new Runnable() {
-				@Override
-				public void run() {
-					view.setBusyTaskStarted("Preparing ...");
-				}
-			});
-			
+		protected List<EvaluatedDescription> doInBackground() throws Exception {
+			Manager manager = Manager.getInstance();
+
 			try {
-				Manager manager = Manager.getInstance();
-				timer = new Timer();
 				if(view.getAxiomType().equals(AxiomType.EQUIVALENT_CLASSES) || view.getAxiomType().equals(AxiomType.SUBCLASS_OF)) {
+					// show message for preparation start
+					SwingUtilities.invokeLater(new Runnable() {
+						@Override
+						public void run() {
+							view.setBusyTaskStarted("Preparing ...");
+						}
+					});
+
+					// init the learning problem
 					manager.initLearningProblem();
+
+					// init the learning algorithm
 					manager.initLearningAlgorithm();
-					
+
+					// show end of preparation
 					view.setBusyTaskEnded();
+
+					// show learning has been started
 					SwingUtilities.invokeLater(new Runnable() {
 						@Override
 						public void run() {
@@ -216,25 +219,33 @@ public class ActionHandler implements ActionListener {
 						}
 					});
 					
-					
-//					timer.schedule(new TimerTask(){
-//						int progress = 0;
-//						List<EvaluatedDescriptionClass> result;
-//						@Override
-//						public void run() {
-//							progress++;
-//							setProgress(progress);
-//							if(!isCancelled() && Manager.getInstance().isLearning()){
-//								result = Manager.getInstance().getCurrentlyLearnedDescriptions();
-//								publish(result);
-//							}
-//						}
-//						
-//					}, 1000, 500);
+					// periodically update the table of results
+					timer = new Timer();
+					timer.schedule(new TimerTask(){
+						int progress = 0;
+						List<EvaluatedDescriptionClass> result;
+						@Override
+						public void run() {
+							progress++;
+							setProgress(progress);
+							if(!isCancelled() && Manager.getInstance().isLearning()){
+								result = Manager.getInstance().getCurrentlyLearnedDescriptions();
+								publish(result);
+							}
+						}
+
+					}, 1000, 500);
+
+					// run the learning algorithm
 					Manager.getInstance().startLearning();
-				} else {
-					List<EvaluatedAxiom<OWLAxiom>> axioms = manager.computeAxioms(view.getEntity(), view.getAxiomType());
-					view.showAxioms(axioms);
+				} else { // other types of axioms
+					try {
+						List<EvaluatedAxiom<OWLAxiom>> axioms = manager.computeAxioms(view.getEntity(), view.getAxiomType());
+						view.showAxioms(axioms);
+					} catch (NoInstanceDataException e) {
+						view.showNoInstanceDataWarning();
+						cancel(true);
+					}
 				}
 			} catch (Exception e) {
 				ErrorLogPanel.showErrorDialog(e);
@@ -248,7 +259,11 @@ public class ActionHandler implements ActionListener {
 		@Override
 		public void done() {
 			if(!isCancelled()){
-				timer.cancel();
+				// stop timer
+				if(timer != null) {
+					timer.cancel();
+				}
+
 				if(view.getAxiomType().equals(AxiomType.EQUIVALENT_CLASSES) || view.getAxiomType().equals(AxiomType.SUBCLASS_OF)) {
 					List<EvaluatedDescriptionClass> result = Manager.getInstance().getCurrentlyLearnedDescriptions();
 					updateList(result);

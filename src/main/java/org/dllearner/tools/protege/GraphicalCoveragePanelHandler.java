@@ -24,6 +24,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -43,6 +44,7 @@ import org.semanticweb.owlapi.model.OWLNegativeDataPropertyAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLNegativeObjectPropertyAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.search.EntitySearcher;
 
 /**
  * This class takes care of all events happening in the GraphicalCoveragePanel.
@@ -69,8 +71,6 @@ public class GraphicalCoveragePanelHandler implements MouseMotionListener,
 	 *            GraphicalCoveragePanel
 	 * @param eval
 	 *            EvaluatedDescription
-	 * @param m
-	 *            DLLearnerModel
 	 */
 	public GraphicalCoveragePanelHandler(GraphicalCoveragePanel p,
 			EvaluatedDescription eval) {
@@ -163,7 +163,7 @@ public class GraphicalCoveragePanelHandler implements MouseMotionListener,
 						}
 						
 						Set<OWLNegativeObjectPropertyAssertionAxiom> negObjects = ontology.getNegativeObjectPropertyAssertionAxioms(v.get(i).getIndividual());
-						individualInformation += "<br><b>negative ObjectProperties</b><br>";
+						individualInformation += "<br><b>negative Object Properties</b><br>";
 						for (OWLNegativeObjectPropertyAssertionAxiom negObject : negObjects) {
 							individualInformation += negObject.toString()
 									+ "<br>";
@@ -175,7 +175,7 @@ public class GraphicalCoveragePanelHandler implements MouseMotionListener,
 							individualInformation += negData.toString()
 									+ "<br>";
 						}
-						Set<OWLIndividual> sameIndies = v.get(i).getIndividual().getSameIndividuals(ontology);
+						Collection<OWLIndividual> sameIndies = EntitySearcher.getSameIndividuals(v.get(i).getIndividual(), ontology);
 						individualInformation += "<br><b>Same Individuals</b><br>";
 						for (OWLIndividual sameIndie : sameIndies) {
 							individualInformation += sameIndie.toString()

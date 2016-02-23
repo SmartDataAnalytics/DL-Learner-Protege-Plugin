@@ -19,43 +19,21 @@
  */
 package org.dllearner.tools.protege;
 
-import static org.semanticweb.owlapi.model.AxiomType.DATA_PROPERTY_DOMAIN;
-import static org.semanticweb.owlapi.model.AxiomType.EQUIVALENT_CLASSES;
-import static org.semanticweb.owlapi.model.AxiomType.OBJECT_PROPERTY_DOMAIN;
-import static org.semanticweb.owlapi.model.AxiomType.OBJECT_PROPERTY_RANGE;
-import static org.semanticweb.owlapi.model.AxiomType.SUBCLASS_OF;
-
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.event.ActionListener;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextPane;
-import javax.swing.JToggleButton;
-
 import org.dllearner.core.EvaluatedAxiom;
 import org.dllearner.core.EvaluatedDescription;
 import org.dllearner.tools.protege.ActionHandler.Actions;
 import org.protege.editor.owl.OWLEditorKit;
-import org.semanticweb.owlapi.model.AxiomType;
-import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLDataPropertyDomainAxiom;
-import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLObjectPropertyDomainAxiom;
-import org.semanticweb.owlapi.model.OWLObjectPropertyRangeAxiom;
+import org.semanticweb.owlapi.model.*;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionListener;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import static org.semanticweb.owlapi.model.AxiomType.*;
 /**
  * This class is responsible for the view of the dllearner. It renders the
  * output for the user and is the graphical component of the plugin.
@@ -67,7 +45,7 @@ public class DLLearnerView extends JPanel{
 
 	
 	private static final  long serialVersionUID = 624829578325729385L; 
-	//TODO: gucken wie geht
+
 	private HyperLinkHandler hyperHandler;
 	// this is the Component which shows the view of the dllearner
 	private JComponent learner;
@@ -138,7 +116,7 @@ public class DLLearnerView extends JPanel{
 		this.editorKit = editorKit;
 		this.entity = entity;
 		this.axiomType = axiomType;
-		
+
 		createUI();
 	}
 	
@@ -295,7 +273,7 @@ public class DLLearnerView extends JPanel{
 	}
 	
 	public void reset(){
-		// get the topic this view is 'talinking' about
+		// get the topic this view is 'talking' about
 		topicLabel = null;
 		if(axiomType.equals(EQUIVALENT_CLASSES)) {
 			topicLabel = "equivalent class expressions";
@@ -385,7 +363,7 @@ public class DLLearnerView extends JPanel{
 	
 	/**
 	 * Sets the panel to select/deselect the examples visible/invisible.
-	 * @param visible boolean
+	 * @param show boolean
 	 */
 	public void showOptionsPanel(boolean show) {
 		optionsPanel.setVisible(show);
@@ -594,6 +572,10 @@ public class DLLearnerView extends JPanel{
 	public void setSuggestions(List<? extends EvaluatedDescription> suggestions){
 		sugPanel.setSuggestions(suggestions);
 	}
+
+	public void showNoInstanceDataWarning() {
+		setHintMessage("<html><font color=\"red\">There is not enough instance data available to learn any axiom.</font></html>");
+	}
 	
 	public void showAxioms(List<EvaluatedAxiom<OWLAxiom>> evaluatedAxioms){
 		// currently we just convert axioms to descriptions
@@ -616,6 +598,7 @@ public class DLLearnerView extends JPanel{
 								evaluatedAxiom.getScore()));
 			}
 		}
+		Collections.sort(evaluatedDescriptions, Collections.reverseOrder());
 		sugPanel.setSuggestions(evaluatedDescriptions);
 	}
 	

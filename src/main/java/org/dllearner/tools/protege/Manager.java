@@ -7,9 +7,8 @@ import static org.semanticweb.owlapi.model.AxiomType.OBJECT_PROPERTY_RANGE;
 import static org.semanticweb.owlapi.model.AxiomType.SUBCLASS_OF;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collections;
-import java.util.List;
-import java.util.SortedSet;
+import java.util.*;
+import java.util.stream.Stream;
 
 import org.dllearner.algorithms.celoe.CELOE;
 import org.dllearner.algorithms.properties.AxiomAlgorithms;
@@ -34,19 +33,15 @@ import org.protege.editor.owl.model.event.EventType;
 import org.protege.editor.owl.model.event.OWLModelManagerChangeEvent;
 import org.protege.editor.owl.model.event.OWLModelManagerListener;
 import org.protege.editor.owl.model.selection.OWLSelectionModelListener;
-import org.semanticweb.owlapi.model.AddAxiom;
-import org.semanticweb.owlapi.model.AxiomType;
-import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLClassExpression;
-import org.semanticweb.owlapi.model.OWLDataFactory;
-import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLIndividual;
-import org.semanticweb.owlapi.model.OWLObject;
-import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.parameters.Imports;
+import org.semanticweb.owlapi.reasoner.Node;
+import org.semanticweb.owlapi.reasoner.NodeSet;
+import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.ReasonerProgressMonitor;
 
 import com.hp.hpl.jena.rdf.model.Model;
+import org.semanticweb.owlapi.search.EntitySearcher;
 
 public class Manager implements OWLModelManagerListener, OWLSelectionModelListener, Disposable{
 	
@@ -129,7 +124,37 @@ public class Manager implements OWLModelManagerListener, OWLSelectionModelListen
 		this.entity = entity;
 	}
 	
-	public List<EvaluatedAxiom<OWLAxiom>> computeAxioms(OWLEntity entity, AxiomType axiomType) {
+	public List<EvaluatedAxiom<OWLAxiom>> computeAxioms(OWLEntity entity, AxiomType axiomType) throws NoInstanceDataException {
+		OWLOntology ontology = editorKit.getWorkspace().getOWLModelManager().getActiveOntology();
+		OWLReasoner reasoner = editorKit.getOWLModelManager().getReasoner();
+
+		// check if there is any instance data to learn the given axiom type for the given entity
+		long instanceDataCnt = 0;
+		if(entity.isOWLClass()) {
+			instanceDataCnt = reasoner.getInstances(entity.asOWLClass(), false).getFlattened().size();
+		} else if(entity.isOWLObjectProperty()) {
+			Set<OWLObjectPropertyExpression> properties = new HashSet<>();
+			properties.add(entity.asOWLObjectProperty());
+			
+			for(Node<OWLObjectPropertyExpression> node : reasoner.getSubObjectProperties(entity.asOWLObjectProperty(), false)) {
+				properties.add(node.getRepresentativeElement().asOWLObjectProperty());
+			}
+
+			instanceDataCnt += ontology.getAxioms(AxiomType.OBJECT_PROPERTY_ASSERTION).parallelStream()
+					.filter(axiom -> properties.contains(axiom.getProperty()))
+					.count();
+
+		} else if(entity.isOWLDataProperty()) {
+			for(Node<OWLDataProperty> node : reasoner.getSubDataProperties(entity.asOWLDataProperty(), false)) {
+				instanceDataCnt += ontology.getAxioms(node.getRepresentativeElement(), Imports.INCLUDED).stream().filter(axiom -> axiom.isOfType(AxiomType.DATA_PROPERTY_ASSERTION)).count();
+			}
+		}
+		System.out.println(entity + ":" + instanceDataCnt);
+		if(instanceDataCnt <= 3) {
+			throw new NoInstanceDataException();
+		}
+
+
 		System.out.print("Started learning of " + 
 				axiomType.getName() + " axioms for " + 
 				OWLAPIUtils.getPrintName(entity.getEntityType()) 
@@ -137,12 +162,10 @@ public class Manager implements OWLModelManagerListener, OWLSelectionModelListen
 		
 		try {
 			Class<? extends AbstractAxiomLearningAlgorithm<? extends OWLAxiom, ? extends OWLObject, ? extends OWLEntity>> algorithmClass = AxiomAlgorithms.getAlgorithmClass(axiomType);
-			
-			OWLOntology ontology = editorKit.getWorkspace().getOWLModelManager().getActiveOntology();
 			Model model = OwlApiJenaUtils.getModel(ontology);
 			LocalModelBasedSparqlEndpointKS ks = new LocalModelBasedSparqlEndpointKS(model);
 			alg = algorithmClass.getConstructor(SparqlEndpointKS.class).newInstance(ks);
-			alg.setEntityToDescribe(entity);
+			alg.setEntityToDescribe(editorKit.getOWLWorkspace().getOWLSelectionModel().getSelectedEntity());
 			alg.setUseSampling(false);
 //			alg.setProgressMonitor(progressMonitor);
 			alg.init();

@@ -79,10 +79,12 @@ public class SuggestionsTable extends JXTable {
 		if(column == 1 && row != -1){
 			EvaluatedDescription ec = ((SuggestionsTableModel)getModel()).getEntryAtRow(row);
 			String text = null;
-			if(ec instanceof EvaluatedDescriptionClass && ((EvaluatedDescriptionClass)ec).followsFromKB()){
-				text = "This axiom follows implicitly from knowledge base!";
-			} else if(DLLearnerPreferences.getInstance().isCheckConsistencyWhileLearning() && !((EvaluatedDescriptionClass)ec).isConsistent()){
-				text = "Adding this axiom may lead to an inconsistent knowledge base!";
+			if(ec instanceof EvaluatedDescriptionClass) {
+				if (((EvaluatedDescriptionClass)ec).followsFromKB()){
+					text = "This axiom follows implicitly from knowledge base!";
+				} else if(DLLearnerPreferences.getInstance().isCheckConsistencyWhileLearning() && !((EvaluatedDescriptionClass)ec).isConsistent()) {
+					text = "Adding this axiom may lead to an inconsistent knowledge base!";
+				}
 			} 
 			return text;
 		}
