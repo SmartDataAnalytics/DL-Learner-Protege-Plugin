@@ -206,13 +206,13 @@ public class ActionHandler implements ActionListener {
 					// init the learning algorithm
 					manager.initLearningAlgorithm();
 
-					// show end of preparation
-					view.setBusyTaskEnded();
-
-					// show learning has been started
 					SwingUtilities.invokeLater(new Runnable() {
 						@Override
 						public void run() {
+							// show end of preparation
+							view.setBusyTaskEnded();
+
+							// show learning has been started
 							view.setLearningStarted();
 							view.showHorizontalExpansionMessage(Manager.getInstance().getMinimumHorizontalExpansion(),
 									Manager.getInstance().getMaximumHorizontalExpansion());

@@ -36,6 +36,7 @@ import org.semanticweb.owlapi.io.ToStringRenderer;
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassExpression;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 /**
  * This is the class that must be implemented to get the plugin integrated in
@@ -103,18 +104,23 @@ public class ProtegePlugin extends AbstractOWLClassExpressionEditor implements O
 
 	@Override
 	public void initialise() throws Exception {
-		System.out.println("Initializing DL-Learner plugin for entity " + getOWLEditorKit().getOWLWorkspace().getOWLSelectionModel().getSelectedEntity() + "...");
-		Manager.getInstance(getOWLEditorKit());
-		
-		view = new DLLearnerView(getOWLEditorKit(), 
+		System.out.println("Initializing DL-Learner plugin for " + getAxiomType().getName() + " axioms...");
+
+		// initialize the manager
+		Manager manager = Manager.getInstance(getOWLEditorKit());
+		manager.setAxiomType(getAxiomType());
+
+		// create the view
+		view = new DLLearnerView(getOWLEditorKit(),
 				getOWLEditorKit().getOWLWorkspace().getOWLSelectionModel().getSelectedEntity(), 
 				getAxiomType());
-		
-		Manager manager = Manager.getInstance();
+
 		manager.setProgressMonitor(view.getStatusBar());
-		manager.setEntity(getOWLEditorKit().getOWLWorkspace().getOWLSelectionModel().getSelectedEntity());
-		manager.setAxiomType(getAxiomType());
-		
+
+		OWLEntity entity = getOWLEditorKit().getOWLWorkspace().getOWLSelectionModel().getSelectedEntity();
+		manager.setEntity(entity);
+
+		// add listeners
 		addListeners();
 		
 		ToStringRenderer.getInstance().setRenderer(new DLSyntaxObjectRenderer());
@@ -129,14 +135,10 @@ public class ProtegePlugin extends AbstractOWLClassExpressionEditor implements O
 	}
 
 	@Override
-	public void addStatusChangedListener(
-			InputVerificationStatusChangedListener arg0) {
-	}
+	public void addStatusChangedListener(InputVerificationStatusChangedListener l) {}
 
 	@Override
-	public void removeStatusChangedListener(
-			InputVerificationStatusChangedListener arg0) {
-	}
+	public void removeStatusChangedListener(InputVerificationStatusChangedListener l) {}
 	
 	private void addListeners(){
 		getOWLEditorKit().getOWLModelManager().addListener(this);

@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
+  <component name="FacetManager">
+    <facet type="Osmorc" name="OSGi">
+      <configuration manifestGenerationMode="OsmorcControlled" manifestLocation="" jarfileLocation="DL-Learner-Plugin.jar" outputPathType="CompilerOutputPath" bndFileLocation="" bundlorFileLocation="" bundleActivator="org.protege.editor.owl.ProtegeOWL" bundleSymbolicName="protege;singleton:=true" bundleVersion="0.9.0.SNAPSHOT" ignoreFilePattern="" useProjectDefaultManifestFileLocation="true" alwaysRebuildBundleJAR="false" doNotSynchronizeWithMaven="false">
+        <additionalProperties>
+          <property key="Bundle-ClassPath" value=".,lib/components-core-1.2.jar,lib/swingx-core-1.6.2-2.jar,lib/joda-time-2.9.2.jar,lib/commons-lang3-3.4.jar,lib/log4j-1.2.17.jar,lib/jamon-2.7.jar,lib/pellet-owlapiv3-2.3.3-dllearner.jar,lib/json-20140107.jar,lib/owlapi-api-4.1.4.jar,lib/slf4j-api-1.6.4.jar,lib/slf4j-simple-1.7.7.jar,lib/jena-arq-2.12.1.jar,lib/jena-core-2.12.1.jar,lib/jena-iri-1.1.1.jar,lib/jena-sparql-api-core-2.12.1-3.jar,lib/jena-sparql-api-cache-h2-2.12.1-3.jar,lib/xercesImpl-2.11.0.jar" />
+          <property key="Bundle-Vendor" value="DL-Learner Project" />
+          <property key="Import-Package" value="javax.swing,org.apache.commons.lang3.*,javax.swing.border,javax.swing.plaf.basic,org.w3c.dom,javax.xml.datatype,org.xml.sax.*,javax.swing.event,javax.swing.filechooser,javax.swing.plaf,javax.swing.plaf.metal,javax.swing.plaf.multi,javax.swing.plaf.synth,javax.swing.table,javax.swing.text,javax.swing.text.html,javax.swing.text.html.parser,javax.swing.text.rtf,javax.swing.tree,javax.swing.undo,javax.xml.bind,javax.xml.transform,javax.xml.transform.dom,javax.xml.transform.stream,org.jdesktop.swingx.*,org.semanticweb.owlapi.functionalparser.*;version=&quot;[4.1.3,5.0.0)&quot;,org.semanticweb.owlapi.functional.renderer.*;version=&quot;[4.1.3,5.0.0)&quot;,org.semanticweb.owlapi.manchestersyntax.*;version=&quot;[4.1.3,5.0.0)&quot;,org.semanticweb.owlapi.owlxml.renderer.*;version=&quot;[4.1.3,5.0.0)&quot;,org.semanticweb.owlapi.rdf.model.*;version=&quot;[4.1.3,5.0.0)&quot;,org.semanticweb.owlapi.rdf.turtle.*;version=&quot;[4.1.3,5.0.0)&quot;,org.semanticweb.owlapi.apibinding.*;version=&quot;[4.1.3,5.0.0)&quot;,org.semanticweb.owlapi.io.*;version=&quot;[4.1.3,5.0.0)&quot;,org.semanticweb.owlapi.model.*;version=&quot;[4.1.3,5.0.0)&quot;,org.semanticweb.owlapi.profiles.*;version=&quot;[4.1.3,5.0.0)&quot;,org.semanticweb.owlapi.reasoner.*;version=&quot;[4.1.3,5.0.0)&quot;,org.semanticweb.owlapi.expression.*;version=&quot;[4.1.3,5.0.0)&quot;,org.semanticweb.owlapi.util.*;version=&quot;[4.1.3,5.0.0)&quot;,org.semanticweb.owlapi.vocab.*;version=&quot;[4.1.3,5.0.0)&quot;,uk.ac.manchester.cs.owl.owlapi;version=&quot;[4.1.3,5.0.0)&quot;,org.semanticweb.owlapi.manchestersyntax.renderer.*;version=&quot;[4.1.3,5.0.0)&quot;,org.semanticweb.owlapi.dlsyntax.renderer.*;version=&quot;[4.1.3,5.0.0)&quot;,org.protege.editor.core;version=&quot;[4.3,6)&quot;,org.protege.editor.core.prefs;version=&quot;[4.3,6)&quot;,org.protege.editor.core.ui.error;version=&quot;[4.3,6)&quot;,org.protege.editor.core.ui.progress;version=&quot;[4.3,6)&quot;,org.protege.editor.core.ui.util;version=&quot;[4.3,6)&quot;,org.protege.editor.owl.*;version=&quot;4.3&quot;,com.google.common.*;version=&quot;18.0&quot;,com.google.common.collect.*;version=&quot;18.0&quot;,*;resolution:=optional" />
+          <property key="Embed-Dependency" value="components-core,swingx-core,joda-time,commons-lang3,log4j,jamon,pellet-owlapiv3,json,owlapi-api,slf4j-api,slf4j-simple,jena-arq,jena-core,jena-iri,jena-sparql-api-core,jena-sparql-api-cache-h2,xercesImpl;scope=compile|runtime" />
+          <property key="Embed-Directory" value="lib" />
+          <property key="Embed-Transitive" value="true" />
+          <property key="Bundle-Name" value="DL-Learner Protege Plugin" />
+          <property key="Include-Resource" value="lib/components-core-1.2.jar=$MAVEN_REPOSITORY$/org/dllearner/components-core/1.2/components-core-1.2.jar,lib/swingx-core-1.6.2-2.jar=$MAVEN_REPOSITORY$/org/swinglabs/swingx-core/1.6.2-2/swingx-core-1.6.2-2.jar,lib/joda-time-2.9.2.jar=$MAVEN_REPOSITORY$/joda-time/joda-time/2.9.2/joda-time-2.9.2.jar,lib/commons-lang3-3.4.jar=$MAVEN_REPOSITORY$/org/apache/commons/commons-lang3/3.4/commons-lang3-3.4.jar,lib/log4j-1.2.17.jar=$MAVEN_REPOSITORY$/log4j/log4j/1.2.17/log4j-1.2.17.jar,lib/jamon-2.7.jar=$MAVEN_REPOSITORY$/com/jamonapi/jamon/2.7/jamon-2.7.jar,lib/pellet-owlapiv3-2.3.3-dllearner.jar=$MAVEN_REPOSITORY$/com/clarkparsia/pellet/pellet-owlapiv3/2.3.3-dllearner/pellet-owlapiv3-2.3.3-dllearner.jar,lib/json-20140107.jar=$MAVEN_REPOSITORY$/org/json/json/20140107/json-20140107.jar,lib/owlapi-api-4.1.4.jar=$MAVEN_REPOSITORY$/net/sourceforge/owlapi/owlapi-api/4.1.4/owlapi-api-4.1.4.jar,lib/slf4j-api-1.6.4.jar=$MAVEN_REPOSITORY$/org/slf4j/slf4j-api/1.6.4/slf4j-api-1.6.4.jar,lib/slf4j-simple-1.7.7.jar=$MAVEN_REPOSITORY$/org/slf4j/slf4j-simple/1.7.7/slf4j-simple-1.7.7.jar,lib/jena-arq-2.12.1.jar=$MAVEN_REPOSITORY$/org/apache/jena/jena-arq/2.12.1/jena-arq-2.12.1.jar,lib/jena-core-2.12.1.jar=$MAVEN_REPOSITORY$/org/apache/jena/jena-core/2.12.1/jena-core-2.12.1.jar,lib/jena-iri-1.1.1.jar=$MAVEN_REPOSITORY$/org/apache/jena/jena-iri/1.1.1/jena-iri-1.1.1.jar,lib/jena-sparql-api-core-2.12.1-3.jar=$MAVEN_REPOSITORY$/org/aksw/jena-sparql-api/jena-sparql-api-core/2.12.1-3/jena-sparql-api-core-2.12.1-3.jar,lib/jena-sparql-api-cache-h2-2.12.1-3.jar=$MAVEN_REPOSITORY$/org/aksw/jena-sparql-api/jena-sparql-api-cache-h2/2.12.1-3/jena-sparql-api-cache-h2-2.12.1-3.jar,lib/xercesImpl-2.11.0.jar=$MAVEN_REPOSITORY$/xerces/xercesImpl/2.11.0/xercesImpl-2.11.0.jar" />
+          <property key="Embedded-Artifacts" value="lib/components-core-1.2.jar;g=&quot;org.dllearner&quot;;a=&quot;components-core&quot;;v=&quot;1.2&quot;,lib/swingx-core-1.6.2-2.jar;g=&quot;org.swinglabs&quot;;a=&quot;swingx-core&quot;;v=&quot;1.6.2-2&quot;,lib/joda-time-2.9.2.jar;g=&quot;joda-time&quot;;a=&quot;joda-time&quot;;v=&quot;2.9.2&quot;,lib/commons-lang3-3.4.jar;g=&quot;org.apache.commons&quot;;a=&quot;commons-lang3&quot;;v=&quot;3.4&quot;,lib/log4j-1.2.17.jar;g=&quot;log4j&quot;;a=&quot;log4j&quot;;v=&quot;1.2.17&quot;,lib/jamon-2.7.jar;g=&quot;com.jamonapi&quot;;a=&quot;jamon&quot;;v=&quot;2.7&quot;,lib/pellet-owlapiv3-2.3.3-dllearner.jar;g=&quot;com.clarkparsia.pellet&quot;;a=&quot;pellet-owlapiv3&quot;;v=&quot;2.3.3-dllearner&quot;,lib/json-20140107.jar;g=&quot;org.json&quot;;a=&quot;json&quot;;v=&quot;20140107&quot;,lib/owlapi-api-4.1.4.jar;g=&quot;net.sourceforge.owlapi&quot;;a=&quot;owlapi-api&quot;;v=&quot;4.1.4&quot;,lib/slf4j-api-1.6.4.jar;g=&quot;org.slf4j&quot;;a=&quot;slf4j-api&quot;;v=&quot;1.6.4&quot;,lib/slf4j-simple-1.7.7.jar;g=&quot;org.slf4j&quot;;a=&quot;slf4j-simple&quot;;v=&quot;1.7.7&quot;,lib/jena-arq-2.12.1.jar;g=&quot;org.apache.jena&quot;;a=&quot;jena-arq&quot;;v=&quot;2.12.1&quot;,lib/jena-core-2.12.1.jar;g=&quot;org.apache.jena&quot;;a=&quot;jena-core&quot;;v=&quot;2.12.1&quot;,lib/jena-iri-1.1.1.jar;g=&quot;org.apache.jena&quot;;a=&quot;jena-iri&quot;;v=&quot;1.1.1&quot;,lib/jena-sparql-api-core-2.12.1-3.jar;g=&quot;org.aksw.jena-sparql-api&quot;;a=&quot;jena-sparql-api-core&quot;;v=&quot;2.12.1-3&quot;,lib/jena-sparql-api-cache-h2-2.12.1-3.jar;g=&quot;org.aksw.jena-sparql-api&quot;;a=&quot;jena-sparql-api-cache-h2&quot;;v=&quot;2.12.1-3&quot;,lib/xercesImpl-2.11.0.jar;g=&quot;xerces&quot;;a=&quot;xercesImpl&quot;;v=&quot;2.11.0&quot;" />
+        </additionalProperties>
+        <additionalJARContents />
+      </configuration>
+    </facet>
+  </component>
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8" inherit-compiler-output="false">
+    <output url="file://$MODULE_DIR$/target/classes" />
+    <output-test url="file://$MODULE_DIR$/target/test-classes" />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
+      <excludeFolder url="file://$MODULE_DIR$/target" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Maven: org.dllearner:components-core:1.2" level="project" />
+    <orderEntry type="library" name="Maven: org.ini4j:ini4j:0.5.4" level="project" />
+    <orderEntry type="library" name="Maven: mysql:mysql-connector-java:5.1.38" level="project" />
+    <orderEntry type="library" name="Maven: net.sourceforge.owlapi:owlapi-distribution:4.1.4" level="project" />
+    <orderEntry type="library" name="Maven: net.sourceforge.owlapi:owlapi-api:4.1.4" level="project" />
+    <orderEntry type="library" name="Maven: net.sourceforge.owlapi:owlapi-apibinding:4.1.4" level="project" />
+    <orderEntry type="library" name="Maven: net.sourceforge.owlapi:owlapi-oboformat:4.1.4" level="project" />
+    <orderEntry type="library" name="Maven: net.sourceforge.owlapi:owlapi-tools:4.1.4" level="project" />
+    <orderEntry type="library" name="Maven: net.sourceforge.owlapi:owlapi-fixers:4.1.4" level="project" />
+    <orderEntry type="library" name="Maven: net.sourceforge.owlapi:owlapi-rio:4.1.4" level="project" />
+    <orderEntry type="library" name="Maven: net.sourceforge.owlapi:owlapi-impl:4.1.4" level="project" />
+    <orderEntry type="library" name="Maven: net.sourceforge.owlapi:owlapitools-concurrentimpl:4.1.0" level="project" />
+    <orderEntry type="library" name="Maven: com.clarkparsia.pellet:pellet-owlapi:2.4.0-dllearner" level="project" />
+    <orderEntry type="library" name="Maven: com.clarkparsia.pellet:pellet-pellint:2.4.0-dllearner" level="project" />
+    <orderEntry type="library" name="Maven: com.clarkparsia.pellet:pellet-modularity:2.4.0-dllearner" level="project" />
+    <orderEntry type="library" name="Maven: com.clarkparsia.pellet:pellet-explanation:2.4.0-dllearner" level="project" />
+    <orderEntry type="library" name="Maven: com.google.code.factplusplus:factpp-owlapi:1.6.2" level="project" />
+    <orderEntry type="library" name="Maven: net.sourceforge.owlapi.owllink:owllink:1.2.2" level="project" />
+    <orderEntry type="library" name="Maven: net.sourceforge.owlapi:org.semanticweb.hermit:1.3.8.413" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.ws.commons.axiom:axiom-api:1.2.14" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.geronimo.specs:geronimo-activation_1.1_spec:1.1" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.geronimo.specs:geronimo-javamail_1.4_spec:1.7.1" level="project" />
+    <orderEntry type="library" name="Maven: jaxen:jaxen:1.1.4" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.geronimo.specs:geronimo-stax-api_1.0_spec:1.0.1" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.james:apache-mime4j-core:0.7.2" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.ws.commons.axiom:axiom-c14n:1.2.14" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.ws.commons.axiom:axiom-impl:1.2.14" level="project" />
+    <orderEntry type="library" name="Maven: org.codehaus.woodstox:woodstox-core-asl:4.1.4" level="project" />
+    <orderEntry type="library" name="Maven: org.codehaus.woodstox:stax2-api:3.1.1" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.ws.commons.axiom:axiom-dom:1.2.14" level="project" />
+    <orderEntry type="library" name="Maven: dk.brics.automaton:automaton:1.11-8" level="project" />
+    <orderEntry type="library" name="Maven: org.semanticweb.elk:elk-owlapi:0.4.3-dllearner" level="project" />
+    <orderEntry type="library" name="Maven: org.semanticweb.elk:elk-owl-model:0.4.3-dllearner" level="project" />
+    <orderEntry type="library" name="Maven: org.semanticweb.elk:elk-owl-implementation:0.4.3-dllearner" level="project" />
+    <orderEntry type="library" name="Maven: org.semanticweb.elk:elk-util-hashing:0.4.3-dllearner" level="project" />
+    <orderEntry type="library" name="Maven: org.semanticweb.elk:elk-reasoner:0.4.3-dllearner" level="project" />
+    <orderEntry type="library" name="Maven: org.semanticweb.elk:elk-util-concurrent:0.4.3-dllearner" level="project" />
+    <orderEntry type="library" name="Maven: org.semanticweb.elk:elk-util-common:0.4.3-dllearner" level="project" />
+    <orderEntry type="library" name="Maven: org.semanticweb.elk:elk-util-io:0.4.3-dllearner" level="project" />
+    <orderEntry type="library" name="Maven: org.semanticweb.elk:elk-util-collections:0.4.3-dllearner" level="project" />
+    <orderEntry type="library" name="Maven: org.semanticweb.elk:elk-util-logging:0.4.3-dllearner" level="project" />
+    <orderEntry type="library" name="Maven: de.tudresden.inf.lat.cel:reasoner:0.5.1" level="project" />
+    <orderEntry type="library" name="Maven: net.sourceforge.owlapi:jfact:4.0.3" level="project" />
+    <orderEntry type="library" name="Maven: org.roaringbitmap:RoaringBitmap:0.4.9" level="project" />
+    <orderEntry type="library" name="Maven: org.fuzzy:fuzzydl:1.0" level="project" />
+    <orderEntry type="library" name="Maven: org.fuzzy:fuzzyowl:1.0" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-beans:4.2.4.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-core:4.2.4.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-core:5.3.0" level="project" />
+    <orderEntry type="library" name="Maven: uk.ac.shef.wit:simmetrics:1.6.2" level="project" />
+    <orderEntry type="library" name="Maven: com.thoughtworks.xstream:xstream:1.4.3" level="project" />
+    <orderEntry type="library" name="Maven: xmlpull:xmlpull:1.1.3.1" level="project" />
+    <orderEntry type="library" name="Maven: xpp3:xpp3_min:1.1.4c" level="project" />
+    <orderEntry type="library" name="Maven: com.google.guava:guava:19.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.commons:commons-math3:3.5" level="project" />
+    <orderEntry type="library" name="Maven: org.aksw:semlibsvm:3.20" level="project" />
+    <orderEntry type="library" name="Maven: com.github.sharispe:slib-sml:0.9.1" level="project" />
+    <orderEntry type="library" name="Maven: com.github.sharispe:slib-utils:0.9.1" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-runtime:2.7.3" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-repository-api:2.7.3" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-query:2.7.3" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-repository-manager:2.7.3" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-repository-event:2.7.3" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-repository-http:2.7.3" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-repository-sparql:2.7.3" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-repository-contextaware:2.7.3" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-repository-sail:2.7.3" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-queryalgebra-model:2.7.3" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-sail-api:2.7.3" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-sail-federation:2.7.3" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-queryalgebra-evaluation:2.7.3" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-queryparser-api:2.7.3" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: org.openrdf.sesame:sesame-queryparser-serql:2.7.3" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-queryparser-sparql:2.7.3" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-queryresultio-api:2.7.3" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: org.openrdf.sesame:sesame-queryresultio-binary:2.7.3" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: org.openrdf.sesame:sesame-queryresultio-sparqljson:2.7.3" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-queryresultio-sparqlxml:2.7.3" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: org.openrdf.sesame:sesame-queryresultio-text:2.7.3" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: org.openrdf.sesame:sesame-repository-dataset:2.7.3" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-http-protocol:2.7.3" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-http-client:2.7.3" level="project" />
+    <orderEntry type="library" name="Maven: commons-httpclient:commons-httpclient:3.1" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-sail-inferencer:2.7.3" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-sail-memory:2.7.3" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: org.openrdf.sesame:sesame-sail-nativerdf:2.7.3" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: org.openrdf.sesame:sesame-sail-rdbms:2.7.3" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: commons-dbcp:commons-dbcp:1.3" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: commons-pool:commons-pool:1.5.4" level="project" />
+    <orderEntry type="library" name="Maven: com.github.sharispe:slib-graph-model-impl:0.9.1" level="project" />
+    <orderEntry type="library" name="Maven: com.github.sharispe:slib-graph-model:0.9.1" level="project" />
+    <orderEntry type="library" name="Maven: com.github.sharispe:slib-graph-algo:0.9.1" level="project" />
+    <orderEntry type="library" name="Maven: com.github.sharispe:slib-tools-module:0.9.1" level="project" />
+    <orderEntry type="library" name="Maven: commons-cli:commons-cli:1.2" level="project" />
+    <orderEntry type="library" name="Maven: com.github.sharispe:slib-graph-io:0.9.1" level="project" />
+    <orderEntry type="library" name="Maven: com.github.sharispe:slib-indexer:0.9.1" level="project" />
+    <orderEntry type="library" name="Maven: commons-configuration:commons-configuration:1.6" level="project" />
+    <orderEntry type="library" name="Maven: commons-beanutils:commons-beanutils-core:1.8.0" level="project" />
+    <orderEntry type="library" name="Maven: com.github.sharispe:slib-graph-utils:0.9.1" level="project" />
+    <orderEntry type="library" name="Maven: net.sf.opencsv:opencsv:2.3" level="project" />
+    <orderEntry type="library" name="Maven: edu.berkeley.compbio:jlibsvm:0.911" level="project" />
+    <orderEntry type="library" name="Maven: com.davidsoergel:dsutils:1.051" level="project" />
+    <orderEntry type="library" name="Maven: com.davidsoergel:conja:1.061" level="project" />
+    <orderEntry type="library" name="Maven: edu.berkeley.compbio:ml:0.921" level="project" />
+    <orderEntry type="library" name="Maven: com.davidsoergel:trees:1.031" level="project" />
+    <orderEntry type="library" name="Maven: com.davidsoergel:runutils:0.911" level="project" />
+    <orderEntry type="library" name="Maven: com.martiansoftware:JSAP:2.0a-ds1" level="project" />
+    <orderEntry type="library" name="Maven: com.davidsoergel:stats:0.931" level="project" />
+    <orderEntry type="library" name="Maven: commons-collections:commons-collections:20040616" level="project" />
+    <orderEntry type="library" name="Maven: com.intellij:annotations:7.0.3" level="project" />
+    <orderEntry type="library" name="Maven: com.martiansoftware:jsap:2.1" level="project" />
+    <orderEntry type="library" name="Maven: org.reflections:reflections:0.9.9-RC1" level="project" />
+    <orderEntry type="library" name="Maven: org.javassist:javassist:3.16.1-GA" level="project" />
+    <orderEntry type="library" name="Maven: dom4j:dom4j:1.6.1" level="project" />
+    <orderEntry type="library" name="Maven: com.google.code.findbugs:jsr305:2.0.1" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.jena:jena-arq:2.12.1" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpclient:4.2.6" level="project" />
+    <orderEntry type="library" name="Maven: com.github.jsonld-java:jsonld-java:0.5.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpclient-cache:4.2.6" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.thrift:libthrift:0.9.1" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:jcl-over-slf4j:1.7.6" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.commons:commons-csv:1.0" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-log4j12:1.7.6" level="project" />
+    <orderEntry type="library" name="Maven: log4j:log4j:1.2.17" level="project" />
+    <orderEntry type="library" name="Maven: xerces:xercesImpl:2.11.0" level="project" />
+    <orderEntry type="library" name="Maven: xml-apis:xml-apis:1.4.01" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.jena:jena-core:2.12.1" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.jena:jena-iri:1.1.1" level="project" />
+    <orderEntry type="library" name="Maven: org.aksw.jena-sparql-api:jena-sparql-api-core:2.12.1-3" level="project" />
+    <orderEntry type="library" name="Maven: org.aksw.jena-sparql-api:jena-sparql-api-utils:2.12.1-3" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.jena:jena-sdb:1.5.1" level="project" />
+    <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.2.4" level="project" />
+    <orderEntry type="library" name="Maven: org.aksw.commons:aksw-commons-collections:0.7.5" level="project" />
+    <orderEntry type="library" name="Maven: org.aksw.commons:aksw-commons-util:0.7.5" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-ext:1.6.0" level="project" />
+    <orderEntry type="library" name="Maven: ch.qos.cal10n:cal10n-api:0.7.2" level="project" />
+    <orderEntry type="library" name="Maven: net.sourceforge.collections:collections-generic:4.01" level="project" />
+    <orderEntry type="library" name="Maven: commons-lang:commons-lang:2.4" level="project" />
+    <orderEntry type="library" name="Maven: commons-validator:commons-validator:1.3.1" level="project" />
+    <orderEntry type="library" name="Maven: commons-beanutils:commons-beanutils:1.7.0" level="project" />
+    <orderEntry type="library" name="Maven: commons-digester:commons-digester:1.6" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.commons:commons-compress:1.2" level="project" />
+    <orderEntry type="library" name="Maven: com.blogspot.nurkiewicz.asyncretry:asyncretry:0.0.1" level="project" />
+    <orderEntry type="library" name="Maven: org.aksw.jena-sparql-api:jena-sparql-api-cache-h2:2.12.1-3" level="project" />
+    <orderEntry type="library" name="Maven: org.aksw.jena-sparql-api:jena-sparql-api-resources:2.12.1-3" level="project" />
+    <orderEntry type="library" name="Maven: com.h2database:h2:1.4.184" level="project" />
+    <orderEntry type="library" name="Maven: edu.stanford.protege:protege-editor-owl:5.0.0-beta-23" level="project" />
+    <orderEntry type="library" name="Maven: edu.stanford.protege:protege-common:5.0.0-beta-23" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:log4j-over-slf4j:1.7.12" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:jul-to-slf4j:1.7.12" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.felix:org.apache.felix.main:4.4.1" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.felix:org.apache.felix.framework:4.4.1" level="project" />
+    <orderEntry type="library" name="Maven: edu.stanford.protege:protege-editor-core:5.0.0-beta-23" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.equinox:org.eclipse.equinox.registry:3.5.0.v20100503" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.core:org.eclipse.core.jobs:3.5.0.v20100515" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.equinox:org.eclipse.equinox.common:3.6.0.v20100503" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.osgi:org.eclipse.osgi:3.6.0.v20100517" level="project" />
+    <orderEntry type="library" name="Maven: com.googlecode.mdock:mdock:2.0.1" level="project" />
+    <orderEntry type="library" name="Maven: com.jgoodies:jgoodies-looks:2.5.3" level="project" />
+    <orderEntry type="library" name="Maven: com.jgoodies:jgoodies-common:1.6.0" level="project" />
+    <orderEntry type="library" name="Maven: edu.stanford.protege:org.protege.xmlcatalog:1.0.5" level="project" />
+    <orderEntry type="library" name="Maven: xml-resolver:xml-resolver:1.2" level="project" />
+    <orderEntry type="library" name="Maven: ch.qos.logback:logback-core:1.1.3" level="project" />
+    <orderEntry type="library" name="Maven: ch.qos.logback:logback-classic:1.1.3" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.servicemix.bundles:org.apache.servicemix.bundles.javax-inject:1_2" level="project" />
+    <orderEntry type="library" name="Maven: net.sourceforge.browserlauncher2:browserlauncher2:1.3" level="project" />
+    <orderEntry type="library" name="Maven: org.swinglabs:swingx-core:1.6.2-2" level="project" />
+    <orderEntry type="library" name="Maven: com.jgoodies:looks:2.2.2" level="project" />
+    <orderEntry type="library" name="Maven: net.sourceforge.owlapi:owlapi-osgidistribution:4.1.3" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.5.1" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.5.1" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.5.1" level="project" />
+    <orderEntry type="library" name="Maven: org.tukaani:xz:1.5" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-model:2.7.12" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-rio-api:2.7.12" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-rio-languages:2.7.12" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-rio-datatypes:2.7.12" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-rio-binary:2.7.12" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-rio-n3:2.7.12" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-rio-nquads:2.7.12" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-rio-ntriples:2.7.12" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-rio-rdfjson:2.7.12" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-rio-rdfxml:2.7.12" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-rio-trix:2.7.12" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-rio-turtle:2.7.12" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-rio-trig:2.7.12" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-util:2.7.12" level="project" />
+    <orderEntry type="library" name="Maven: com.github.jsonld-java:jsonld-java-sesame:0.5.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpcore:4.4.3" level="project" />
+    <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.9" level="project" />
+    <orderEntry type="library" name="Maven: commons-logging:commons-logging:1.2" level="project" />
+    <orderEntry type="library" name="Maven: org.semarglproject:semargl-sesame:0.6.1" level="project" />
+    <orderEntry type="library" name="Maven: org.semarglproject:semargl-core:0.6.1" level="project" />
+    <orderEntry type="library" name="Maven: org.semarglproject:semargl-rdfa:0.6.1" level="project" />
+    <orderEntry type="library" name="Maven: org.semarglproject:semargl-rdf:0.6.1" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.servicemix.bundles:org.apache.servicemix.bundles.aopalliance:1.0_6" level="project" />
+    <orderEntry type="library" name="Maven: net.sf.trove4j:trove4j:3.0.3" level="project" />
+    <orderEntry type="library" name="Maven: com.google.inject:guice:4.0" level="project" />
+    <orderEntry type="library" name="Maven: javax.inject:javax.inject:1" level="project" />
+    <orderEntry type="library" name="Maven: aopalliance:aopalliance:1.0" level="project" />
+    <orderEntry type="library" name="Maven: com.google.inject.extensions:guice-assistedinject:4.0" level="project" />
+    <orderEntry type="library" name="Maven: com.google.inject.extensions:guice-multibindings:4.0" level="project" />
+    <orderEntry type="library" name="Maven: commons-io:commons-io:2.4" level="project" />
+    <orderEntry type="library" name="Maven: com.jamonapi:jamon:2.7" level="project" />
+    <orderEntry type="library" name="Maven: org.json:json:20140107" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.6.4" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-simple:1.7.7" level="project" />
+    <orderEntry type="library" name="Maven: com.clarkparsia.pellet:pellet-owlapiv3:2.3.3-dllearner" level="project" />
+    <orderEntry type="library" name="Maven: com.clarkparsia.pellet:pellet-core:2.3.3-dllearner" level="project" />
+    <orderEntry type="library" name="Maven: com.github.ansell.aterms:aterm-java:1.8.2-p1" level="project" />
+    <orderEntry type="library" name="Maven: com.github.ansell.jjtraveler:jjtraveler:0.6" level="project" />
+    <orderEntry type="library" name="Maven: com.github.ansell.aterms:shared-objects:1.4.9-p1" level="project" />
+    <orderEntry type="library" name="Maven: org.jgrapht:jgrapht-jdk1.5:0.7.3" level="project" />
+    <orderEntry type="library" name="Maven: com.clarkparsia.pellet:pellet-query:2.3.3-dllearner" level="project" />
+    <orderEntry type="library" name="Maven: com.clarkparsia.pellet:pellet-jena:2.3.3-dllearner" level="project" />
+    <orderEntry type="library" name="Maven: org.antlr:antlr-runtime:3.4" level="project" />
+    <orderEntry type="library" name="Maven: org.antlr:stringtemplate:3.2.1" level="project" />
+    <orderEntry type="library" name="Maven: antlr:antlr:2.7.7" level="project" />
+    <orderEntry type="library" name="Maven: net.sourceforge.owlapi:owlapi-parsers:3.4.10" level="project" />
+    <orderEntry type="library" name="Maven: joda-time:joda-time:2.9.2" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.4" level="project" />
+  </component>
+</module>

@@ -18,14 +18,12 @@
  *
  */
 package org.dllearner.tools.protege;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.GridLayout;
-
-import javax.swing.JPanel;
 
 import org.dllearner.core.EvaluatedDescription;
 import org.protege.editor.owl.OWLEditorKit;
+
+import javax.swing.*;
+import java.awt.*;
 
 
 
@@ -41,18 +39,12 @@ public class MoreDetailForSuggestedConceptsPanel extends JPanel {
 
 	private static final long serialVersionUID = 785272797932584581L;
 	
-	 // Model of the dllearner
-	 
 	private EvaluatedDescription eval;
 	private static final int HEIGHT = 300;
 	private static final int WIDTH = 540;
 	private GraphicalCoveragePanel graphicalPanel;
 	private GraphicalCoverageTextField graphicalText;
 
-	/**
-	 * This is the constructor for the Panel.
-	 * @param model DLLearnerModel
-	 */
 	public MoreDetailForSuggestedConceptsPanel(OWLEditorKit editorKit) {
 		super();
 		setLayout(new GridLayout(1, 2));
@@ -73,7 +65,6 @@ public class MoreDetailForSuggestedConceptsPanel extends JPanel {
 		graphicalText.setDescription(desc);
 		graphicalPanel.setDescription(desc);
 	}
-
 
 	/**
 	 * Returns the graphical coverage panel.
