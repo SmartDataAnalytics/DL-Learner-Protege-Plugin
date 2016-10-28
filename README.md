@@ -6,6 +6,7 @@ A Protégé plugin for the DL-Learner framework
 The current plugin only works with Protégé 4.3 and newer.
 
 ## Usage
+![alt tag](https://github.com/AKSW/DL-Learner-Protege-Plugin/raw/develop/doc/images/step_1.png)
  * choose a class in the class hierarchy view
  * depending on whether you want to search for equivalent class or a super class expressions, i.e. click on the corresponding Add-button (+)
  * choose the DL-Learner tab in the new dialog
