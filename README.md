@@ -6,9 +6,22 @@ A Protégé plugin for the DL-Learner framework
 The current plugin only works with Protégé 4.3 and newer.
 
 ## Usage
- * choose a class in the class hierarchy view
- * depending on whether you want to search for equivalent class or a super class expressions, i.e. click on the corresponding Add-button (+)
- * choose the DL-Learner tab in the new dialog
- * click on the 'suggest equivalent class expressions' (or 'suggest super class expressions') button to start the learning process
- * during algorithm runtime, the list of suggested class expressions will periodically be updated
- * once the learning has been finsihed, you can choose the appropriate class expression(s) and click on the 'Add' button to add them to the current ontology
+![alt tag](https://github.com/AKSW/DL-Learner-Protege-Plugin/raw/develop/doc/images/step_1.png)
+
+ 1) Choose a class in the class hierarchy view
+ 
+ ![alt tag](https://github.com/AKSW/DL-Learner-Protege-Plugin/raw/develop/doc/images/step_2.png)
+ 
+ 2) Depending on whether you want to search for equivalent class or a super class expressions, i.e. click on the corresponding Add-button ('Equivalent To +')
+ 
+ ![alt tag](https://github.com/AKSW/DL-Learner-Protege-Plugin/raw/develop/doc/images/step_3.png)
+ 
+ 3) Choose the DL-Learner tab in the new dialog. Then, click on the 'suggest equivalent class expressions' (or 'suggest super class expressions') button to start the learning process
+ 
+ ![alt tag](https://github.com/AKSW/DL-Learner-Protege-Plugin/raw/develop/doc/images/step_4.png)
+ 
+ 4) During algorithm runtime, the list of suggested class expressions will periodically be updated. Once the learning has been finished, you can choose the appropriate class expression(s) and click on the 'Add' button to add them to the current ontology
+ 
+ ![alt tag](https://github.com/AKSW/DL-Learner-Protege-Plugin/raw/develop/doc/images/step_5.png)
+ 
+
