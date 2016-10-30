@@ -4,7 +4,7 @@
 	<groupId>org.dllearner</groupId>
 	<artifactId>protege</artifactId>
 	<packaging>bundle</packaging>
-	<version>0.9-SNAPSHOT</version>
+	<version>0.9-RC1</version>
 
 	<name>DL-Learner Protege Plugin</name>
 	<url>http://aksw.org/Projects/DLLearner</url>
@@ -30,6 +30,11 @@
 		<!-- Apache Jena -->
 		<dependency>
 			<groupId>org.apache.jena</groupId>
+			<artifactId>jena-base</artifactId>
+			<version>${jena.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.jena</groupId>
 			<artifactId>jena-core</artifactId>
 			<version>${jena.version}</version>
 		</dependency>
@@ -42,6 +47,11 @@
 			<groupId>org.apache.jena</groupId>
 			<artifactId>jena-arq</artifactId>
 			<version>${jena.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.jena</groupId>
+			<artifactId>jena-shaded-guava</artifactId>
+			<version>3.1.0</version>
 		</dependency>
 
 		<dependency>
@@ -238,7 +248,8 @@
 							commons-lang3,
 							log4j,jamon,pellet-owlapiv3,
 						json,owlapi-api,slf4j-api,slf4j-simple,
-						jena-arq,jena-core,jena-iri,jena-sparql-api-core,jena-sparql-api-cache-h2,xercesImpl;scope=compile|runtime</Embed-Dependency>
+						jena-arq,jena-core,jena-iri,jena-base,jena-shaded-guava,
+                            jena-sparql-api-core,jena-sparql-api-cache-h2,xercesImpl;scope=compile|runtime</Embed-Dependency>
 						<Embed-Directory>lib</Embed-Directory>
 						<Embed-Transitive>true</Embed-Transitive>
 					</instructions>

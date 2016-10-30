@@ -42,19 +42,16 @@ public class SuggestClassPanel extends JPanel {
 
 	private final SuggestionsTable suggestionTable;
 
-	private final JScrollPane suggestScroll;
-
 	/**
 	 * This is the constructor for the suggest panel. It creates a new Scroll
 	 * panel and puts the Suggest List in it.
-	 * @param m model of the DL-Learner
-	 * @param v view of the DL-Learner
+	 * @param editorKit the OWLEditorKit
 	 */
 	public SuggestClassPanel(OWLEditorKit editorKit) {
 		super();
 		this.setLayout(new BorderLayout());
 		// renders scroll bars if necessary
-		suggestScroll = new JScrollPane(
+		JScrollPane suggestScroll = new JScrollPane(
 				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		suggestionTable = new SuggestionsTable(editorKit);

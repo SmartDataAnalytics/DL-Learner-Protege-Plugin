@@ -54,6 +54,8 @@ public class DLLearnerView extends JPanel{
 
 	private JButton addButton;
 
+	private JLabel selectedClassExpressions;
+
 	// Runbutton to start the learning algorithm
 
 	private JButton runButton;
@@ -94,7 +96,7 @@ public class DLLearnerView extends JPanel{
 	private boolean isInconsistent;
 	// This is the Panel for more details of the suggested concept
 	private MoreDetailForSuggestedConceptsPanel detail;
-	private OWLEditorKit editorKit;
+	 OWLEditorKit editorKit;
 	private JScrollPane learnerScroll;
 	private static final int SCROLL_SPEED = 10;
 	private static final int SCROLL_WIDTH = 600;
@@ -159,6 +161,8 @@ public class DLLearnerView extends JPanel{
 		c.weighty = 0.0;
 		c.gridwidth = 1;
 		addButtonPanel.add("North", addButton);
+		selectedClassExpressions = new JLabel();
+		addButtonPanel.add(selectedClassExpressions, BorderLayout.SOUTH);
 		add(addButtonPanel, c);
 		
 		JPanel runButtonPanel = new JPanel(new FlowLayout());
@@ -484,6 +488,10 @@ public class DLLearnerView extends JPanel{
 		}
 		runButton.setEnabled(true);
 		this.setHintMessage(message);
+	}
+
+	public void showSelectClassExpression(OWLClassExpression ce) {
+		selectedClassExpressions.setText(editorKit.getModelManager().getRendering(ce));
 	}
 	
 	/**

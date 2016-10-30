@@ -21,7 +21,7 @@ public class SuggestionsTableModel extends AbstractTableModel {
 	
 	public SuggestionsTableModel(){
 		super();
-		suggestionList = new ArrayList<EvaluatedDescription>();
+		suggestionList = new ArrayList<>();
 	}
 	
 	public SuggestionsTableModel(List<EvaluatedDescription> suggestionList){
@@ -106,6 +106,14 @@ public class SuggestionsTableModel extends AbstractTableModel {
 	
 	public EvaluatedDescription getSelectedValue(int rowIndex){
 		return suggestionList.get(rowIndex);
+	}
+
+	public List<EvaluatedDescription> getSelectedValues(int[] rows){
+		List<EvaluatedDescription> values = new ArrayList<>();
+		for (int row : rows) {
+			values.add(suggestionList.get(row));
+		}
+		return values;
 	}
 	
 	public int getSelectionIndex(EvaluatedDescription e){

@@ -19,11 +19,18 @@
  */
 package org.dllearner.tools.protege;
 
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.dllearner.core.EvaluatedDescription;
 import org.semanticweb.owlapi.model.AxiomType;
+import org.semanticweb.owlapi.model.OWLClassExpression;
+import org.semanticweb.owlapi.model.OWLObjectUnionOf;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * This is the MouseListener for the Suggest Panel.
  * @author Christian Koetteritzsch
@@ -33,8 +40,8 @@ public class SuggestClassPanelHandler implements  ListSelectionListener{
 	private DLLearnerView view;
 	private EvaluatedDescription evaluatedDescription;
 	
-	public SuggestClassPanelHandler(DLLearnerView v) {
-		this.view = v;
+	public SuggestClassPanelHandler(DLLearnerView view) {
+		this.view = view;
 	}
 
 	@Override
@@ -52,6 +59,29 @@ public class SuggestClassPanelHandler implements  ListSelectionListener{
 					view.getGraphicalPanel().setDescription(evaluatedDescription);
 					view.getAddButton().setEnabled(true);
 				}
+			} else {
+				// get the selected class expressions from table
+				List<EvaluatedDescription> classExpressions = view.getSuggestClassPanel().getSuggestionsTable().getSelectedSuggestions();
+
+				//
+				boolean union = true;
+				OWLClassExpression ce = null;
+				if(classExpressions.size() > 1) {
+					if(union) {
+						// create union
+						ce = view.editorKit.getOWLModelManager().getOWLDataFactory().getOWLObjectUnionOf(
+								classExpressions.stream().map(ed -> (OWLClassExpression) ed.getDescription()).collect(
+										Collectors.toSet()));
+
+					}
+				} else {
+					ce = (OWLClassExpression) classExpressions.get(0).getDescription();
+				}
+
+				// show selected class expression(s)
+				view.showSelectClassExpression(ce);
+
+				view.getAddButton().setEnabled(true);
 			}
 			
 		}

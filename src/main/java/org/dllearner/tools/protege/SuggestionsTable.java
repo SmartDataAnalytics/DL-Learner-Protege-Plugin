@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.dllearner.core.EvaluatedDescription;
+import org.dllearner.core.Score;
 import org.dllearner.learningproblems.EvaluatedDescriptionClass;
 import org.jdesktop.swingx.JXTable;
 import org.protege.editor.owl.OWLEditorKit;
@@ -16,7 +17,7 @@ public class SuggestionsTable extends JXTable {
 	
 	private final OWLCellRenderer owlRenderer;
 	private final ProgressBarTableCellRenderer progressRenderer;
-	private EvaluatedDescription old;
+	private EvaluatedDescription<? extends Score> old;
 	
 	public SuggestionsTable(OWLEditorKit editorKit){
 		super(new SuggestionsTableModel());
@@ -70,6 +71,10 @@ public class SuggestionsTable extends JXTable {
 	
 	public EvaluatedDescription getSelectedSuggestion(){	
 		return ((SuggestionsTableModel)getModel()).getSelectedValue(getSelectedRow());
+	}
+
+	public List<EvaluatedDescription> getSelectedSuggestions(){
+		return ((SuggestionsTableModel)getModel()).getSelectedValues(getSelectedRows());
 	}
 	
 	@Override
