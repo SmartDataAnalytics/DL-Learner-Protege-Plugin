@@ -88,8 +88,11 @@ public class OptionPanel extends JPanel {
 		checkBoxPanel.setLayout(new GridBagLayout());
 		
 		JLabel noiseInPercentageLabel = new JLabel("<html>noise in %:    </html>");
-		JLabel maxExecutionTimeLabel = new JLabel("<html>maximum execution time:    </html>");
+		noiseInPercentageLabel.setToolTipText("the (approximated) percentage of noise within the examples, i.e. noise regulates how many positives can be misclassified and when the algorithm terminates");
+		JLabel maxExecutionTimeLabel = new JLabel("<html>max. execution time (in s):    </html>");
+		maxExecutionTimeLabel.setToolTipText("maximum execution of the algorithm in seconds");
 		JLabel nrOfConceptsLabel = new JLabel("<html>max. number of results:    </html>");
+		nrOfConceptsLabel.setToolTipText("Sets the maximum number of results one is interested in. (Setting this to a lower value may increase performance as the learning algorithm has to store/evaluate/beautify less descriptions).");
 		
 		noiseInPercentage = new JSlider(0, 50, 5);
 		noiseInPercentage.setPaintTicks(true);
@@ -121,14 +124,19 @@ public class OptionPanel extends JPanel {
 		
 		
 		allBox = new JCheckBox("<html>all</html>", true);
+		allBox.setToolTipText("<html>universal restrictions (<pre>owl:allValuesFrom</pre>)</html>");
 		//allBox.addItemListener(optionHandler);
 		someBox = new JCheckBox("<html>some</html>", true);
+		someBox.setToolTipText("<html>existential restrictions (<pre>owl:someValuesFrom</pre>)</html>");
 		//someBox.addItemListener(optionHandler);
 		notBox = new JCheckBox("<html>not</html>", false);
+		notBox.setToolTipText("<html>negation (<pre>owl:complementOf</pre>)</html>");
 		//notBox.addItemListener(optionHandler);
 		valueBox = new JCheckBox("<html>value</html>", false);
+		valueBox.setToolTipText("<html>value restrictions (<pre>owl:hasValue</pre>)</html>");
 		//valueBox.addItemListener(optionHandler);
 		cardinalityBox = new JCheckBox("<html> &#8249;=x, &#8250;=x with max.:</html>", true);
+		cardinalityBox.setToolTipText("<html>cardinality restrictions (<pre>owl:minCardinality, owl:maxCardinality</pre>)</html>");
 		cardinalityBox.setActionCommand("Cardinality");
 		cardinalityBox.addActionListener(optionHandler);
 		//moreBox.addItemListener(optionHandler);
