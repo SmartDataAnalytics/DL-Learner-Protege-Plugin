@@ -23,7 +23,9 @@ import org.dllearner.core.EvaluatedAxiom;
 import org.dllearner.core.EvaluatedDescription;
 import org.dllearner.tools.protege.ActionHandler.Actions;
 import org.protege.editor.owl.OWLEditorKit;
+import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.*;
+import uk.ac.manchester.cs.owl.owlapi.OWLClassImpl;
 
 import javax.swing.*;
 import java.awt.*;
@@ -60,13 +62,6 @@ public class DLLearnerView extends JPanel{
 
 	private JButton runButton;
 
-	// This is the label for the advanced button.
-
-	private JLabel advancedLabel;
-
-	// Advanced Button to activate/deactivate the example select panel
-
-	private JToggleButton advancedButton;
 
 	// Action Handler that manages the Button actions
 
@@ -91,7 +86,6 @@ public class DLLearnerView extends JPanel{
 	private ImageIcon helpIcon;
 	private JTextPane hint;
 	private JButton helpButton;
-	private JPanel advancedPanel;
 	private JPanel hintPanel;
 	private boolean isInconsistent;
 	// This is the Panel for more details of the suggested concept
@@ -167,7 +161,7 @@ public class DLLearnerView extends JPanel{
 		
 		JPanel runButtonPanel = new JPanel(new FlowLayout());
 		runButton = new JButton();
-		runButton.setPreferredSize(new Dimension(260, 30));
+//		runButton.setPreferredSize(new Dimension(260, 30));
 		runButton.setEnabled(false);
 		runButton.setToolTipText("Start the learning algorithm.");
 		runButtonPanel.add(BorderLayout.WEST, runButton);
@@ -238,42 +232,30 @@ public class DLLearnerView extends JPanel{
 		c.weighty = 0.0;
 		add(detail, c);
 		
-		advancedPanel = new JPanel();
-		URL iconUrl = this.getClass().getResource("arrow.gif");
-		icon = new ImageIcon(iconUrl);
-		URL toggledIconUrl = this.getClass().getResource("arrow2.gif");
-		toggledIcon = new ImageIcon(toggledIconUrl);
-		advancedLabel = new JLabel("<html>Advanced Settings</html>");
-		advancedPanel.add(advancedLabel);
-		advancedButton = new JToggleButton(icon);
-		advancedButton.setName("Advanced");
-		advancedButton.setIcon(icon);
-		advancedButton.setSelected(false);
-		advancedButton.setVisible(true);
-		advancedButton.setSize(20, 20);
-		advancedPanel.add(advancedButton);
-		c.fill = GridBagConstraints.NONE;
+		c.fill = GridBagConstraints.BOTH;
+		c.gridwidth = 3;
 		c.gridx = 0;
 		c.weightx = 0.0;
 		c.weighty = 0.0;
 		c.gridy = 5;
-		add(advancedPanel, c);
-		
-		optionsPanel = new OptionPanel();
-		optionsPanel.setVisible(false);
-		c.fill = GridBagConstraints.BOTH;
-		c.gridx = 0;
-		c.gridy = 6;
-		c.weightx = 0.0;
-		c.weighty = 0.0;
-		c.gridwidth = 3;
-		add(optionsPanel, c);
+		add(createAdvancedOptionsPanel(), c);
 		
 		this.addAcceptButtonListener(this.actionHandler);
 		this.addRunButtonListener(this.actionHandler);
-		this.addAdvancedButtonListener(this.actionHandler);	
 		
 		learnerScroll.setViewportView(this);
+	}
+
+	private JComponent createAdvancedOptionsPanel() {
+		CollapsiblePanel panel = new CollapsiblePanel();
+		panel.setTitle("Advanced Settings");
+
+		optionsPanel = new OptionPanel();
+		panel.add(optionsPanel);
+
+		panel.toggleVisibility(false);
+
+		return panel;
 	}
 	
 	public void reset(){
@@ -303,24 +285,6 @@ public class DLLearnerView extends JPanel{
 	
 	public JComponent getView(){
 		return learnerScroll;
-	}
-	
-	/**
-	 * This method sets the right icon for the advanced Panel.
-	 * @param toggled boolean
-	 */
-	public void setIconToggled(boolean toggled) {
-		this.toogled = toggled;
-		if (this.toogled) {
-			advancedButton.setIcon(toggledIcon);
-//			learnerPanel.setPreferredSize(new Dimension(WIDTH, OPTION_HEIGHT));
-//			learnerScroll.setPreferredSize(new Dimension(SCROLL_WIDTH, SCROLL_HEIGHT));
-		}
-		if (!this.toogled) {
-			advancedButton.setIcon(icon);
-//			learnerPanel.setPreferredSize(new Dimension(WIDTH, HEIGHT));
-//			learnerScroll.setPreferredSize(new Dimension(SCROLL_WIDTH, SCROLL_HEIGHT));
-		}
 	}
 	
 	/**
@@ -459,14 +423,6 @@ public class DLLearnerView extends JPanel{
 		addButton.addActionListener(a);
 	}
 
-	/**
-	 * Adds Actionlistener to the advanced button.
-	 * @param a ActionListener
-	 */
-	public void addAdvancedButtonListener(ActionListener a) {
-		advancedButton.addActionListener(a);
-	}
-	
 	/**
 	 * This method sets the run button enable after learning.
 	 */
@@ -608,6 +564,15 @@ public class DLLearnerView extends JPanel{
 		}
 		Collections.sort(evaluatedDescriptions, Collections.reverseOrder());
 		sugPanel.setSuggestions(evaluatedDescriptions);
+	}
+
+	public static void main(String[] args) throws Exception {
+		DLLearnerView view = new DLLearnerView(null, new OWLClassImpl(IRI.create("http://ex.org/koala#k1")), AxiomType.EQUIVALENT_CLASSES);
+		JFrame f = new JFrame();
+		f.setContentPane(view);
+		f.pack();
+		f.setVisible(true);
+
 	}
 	
 }
