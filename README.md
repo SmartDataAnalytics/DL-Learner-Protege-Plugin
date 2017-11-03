@@ -11,13 +11,17 @@ The following axioms are currently supported via the Protégé editor:
    * [SubClassOf](https://www.w3.org/TR/owl2-syntax/#Subclass_Axioms) with the subclass beeing an OWL class
    * [EquivalentClasses](https://www.w3.org/TR/owl2-syntax/#Equivalent_Classes)
 * Object Property Axioms:
+<!--- 
    * [Object Subproperties](https://www.w3.org/TR/owl2-syntax/#Object_Subproperties)
    * [Equivalent Object Properties](https://www.w3.org/TR/owl2-syntax/#Equivalent_Object_Properties)
+--->
    * [Object Property Domain](https://www.w3.org/TR/owl2-syntax/#Object_Property_Domain)
    * [Object Property Range](https://www.w3.org/TR/owl2-syntax/#Object_Property_Range)
 * Data Property Axioms
+<!--- 
    * [Data Subproperties](https://www.w3.org/TR/owl2-syntax/#Data_Subproperties)
    * [Equivalent Data Properties](https://www.w3.org/TR/owl2-syntax/#Equivalent_Data_Properties)
+--->
    * [Data Property Domain](https://www.w3.org/TR/owl2-syntax/#Data_Property_Domain)
    * [Data Property Range](https://www.w3.org/TR/owl2-syntax/#Data_Property_Range)
 
