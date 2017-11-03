@@ -1,9 +1,37 @@
 # DL-Learner Protégé Plugin
 A Protégé plugin for the DL-Learner framework
 
+## Features
+
+Learn OWL axioms based on instance data.
+
+The following axioms are currently supported via the Protégé editor:
+
+* Class Axioms:
+** [SubClassOf](https://www.w3.org/TR/owl2-syntax/#Subclass_Axioms) with the subclass beeing an OWL class
+** [EquivalentClasses](https://www.w3.org/TR/owl2-syntax/#Equivalent_Classes)
+* Object Property Axioms:
+** [Object Subproperties](https://www.w3.org/TR/owl2-syntax/#Object_Subproperties)
+** [Equivalent Object Properties](https://www.w3.org/TR/owl2-syntax/#Equivalent_Object_Properties)
+** [Object Property Domain](https://www.w3.org/TR/owl2-syntax/#Object_Property_Domain)
+** [Object Property Range](https://www.w3.org/TR/owl2-syntax/#Object_Property_Range)
+* Data Property Axioms
+** [Data Subproperties](https://www.w3.org/TR/owl2-syntax/#Data_Subproperties)
+** [Equivalent Data Properties](https://www.w3.org/TR/owl2-syntax/#Equivalent_Data_Properties)
+** [Data Property Domain](https://www.w3.org/TR/owl2-syntax/#Data_Property_Domain)
+** [Data Property Range](https://www.w3.org/TR/owl2-syntax/#Data_Property_Range)
+
 ## Requirements
 
-The current plugin only works with Protégé 4.3 and newer.
+The current plugin only works with Protégé 5.0 and newer.
+
+## Installation
+
+### Protege Autoupdate
+
+### Manually from Github
+
+
 
 ## Usage
 ![alt tag](https://github.com/AKSW/DL-Learner-Protege-Plugin/raw/develop/doc/images/step_1.png)
