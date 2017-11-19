@@ -40,20 +40,28 @@ public class SuggestClassPanelHandler implements  ListSelectionListener{
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
 		if(view.getSuggestClassPanel().getSuggestionsTable().getSelectedRow() >= 0){
+
+			// get the selected class expression
+			EvaluatedDescription newDesc = view.getSuggestClassPanel().getSuggestionsTable().getSelectedSuggestion();
+
+			// enable 'Add' button
+			if(!e.getValueIsAdjusting() && newDesc != null) {
+				view.getAddButton().setEnabled(true);
+			}
+
+			// update the class coverage diagram
 			if(view.getAxiomType().equals(AxiomType.EQUIVALENT_CLASSES) || 
 					view.getAxiomType().equals(AxiomType.SUBCLASS_OF)) {
-				EvaluatedDescription newDesc = view.getSuggestClassPanel().getSuggestionsTable().getSelectedSuggestion();
 //				evaluatedDescription = view.getSuggestClassPanel().getSuggestionsTable().getSelectedSuggestion();
 				if(!e.getValueIsAdjusting() && (evaluatedDescription == null || !evaluatedDescription.equals(newDesc))){
-					evaluatedDescription = newDesc;
 //					view.getMoreDetailForSuggestedConceptsPanel().renderDetailPanel(evaluatedDescription);
 					view.showHintMessagePanel(false);
 					view.showGraphicalPanel(true);
 					view.getGraphicalPanel().setDescription(evaluatedDescription);
-					view.getAddButton().setEnabled(true);
 				}
 			}
-			
+
+			evaluatedDescription = newDesc;
 		}
 		
 		

@@ -116,11 +116,11 @@ public class GraphicalCoveragePanel extends JPanel {
 		}
 		
 		
-		conceptVector = new Vector<String>();
-		posCovIndVector = new Vector<IndividualPoint>();
-		posNotCovIndVector = new Vector<IndividualPoint>();
-		additionalIndividuals = new Vector<IndividualPoint>();
-		points = new Vector<IndividualPoint>();
+		conceptVector = new Vector<>();
+		posCovIndVector = new Vector<>();
+		posNotCovIndVector = new Vector<>();
+		additionalIndividuals = new Vector<>();
+		points = new Vector<>();
 		this.computeGraphics();
 		handler = new GraphicalCoveragePanelHandler(this, desc);
 		
@@ -362,12 +362,12 @@ public class GraphicalCoveragePanel extends JPanel {
 		int i = conceptNew.length();
 		while (i > 0) {
 			int sub = 0;
-			String subString = "";
-			if(conceptNew.contains(" ")) {
-			sub = conceptNew.indexOf(" ");
-			subString = conceptNew.substring(0, sub) + " ";
-			conceptNew = conceptNew.replace(conceptNew.substring(0, sub + 1),
-					"");
+			String subString;
+			if (conceptNew.contains(" ")) {
+				sub = conceptNew.indexOf(" ");
+				subString = conceptNew.substring(0, sub) + " ";
+				conceptNew = conceptNew.replace(conceptNew.substring(0, sub + 1),
+						"");
 			} else {
 				subString = conceptNew;
 				conceptNew = "";

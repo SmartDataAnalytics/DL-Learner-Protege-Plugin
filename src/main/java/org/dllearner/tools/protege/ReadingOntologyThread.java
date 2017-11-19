@@ -32,18 +32,10 @@ public class ReadingOntologyThread extends Thread {
 
 	private DLLearnerView view;
 
-	/**
-	 * This is the constructor of the ReadingOntologyThread.
-	 * 
-	 * @param v
-	 *            DL-Learner view
-	 * 
-	 */
 	public ReadingOntologyThread(DLLearnerView v) {
 		this.view = v;
 	}
 
-	
 
 	@Override
 	public void run() {

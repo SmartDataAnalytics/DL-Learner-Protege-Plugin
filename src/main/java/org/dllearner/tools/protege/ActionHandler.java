@@ -19,20 +19,15 @@
  */
 package org.dllearner.tools.protege;
 
-import static org.semanticweb.owlapi.model.AxiomType.DATA_PROPERTY_DOMAIN;
-import static org.semanticweb.owlapi.model.AxiomType.OBJECT_PROPERTY_DOMAIN;
-import static org.semanticweb.owlapi.model.AxiomType.OBJECT_PROPERTY_RANGE;
-
-import java.awt.Dimension;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.NavigableSet;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
-import javax.swing.SwingWorker;
+import javax.swing.*;
 
 import org.dllearner.core.EvaluatedAxiom;
 import org.dllearner.core.EvaluatedDescription;
@@ -42,9 +37,6 @@ import org.protege.editor.core.ui.error.ErrorLogPanel;
 import org.protege.editor.core.ui.progress.BackgroundTask;
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLDataPropertyDomainAxiom;
-import org.semanticweb.owlapi.model.OWLObjectPropertyDomainAxiom;
-import org.semanticweb.owlapi.model.OWLObjectPropertyRangeAxiom;
 
 /**
  * This class processes input from the user.
@@ -66,8 +58,6 @@ public class ActionHandler implements ActionListener {
 //	private final Color colorGreen = new Color(0, 139, 0);
 	private final DLLearnerView view;
 	
-	private static final String EQUIVALENT_CLASS_LEARNING_STRING = "<html>suggest equivalent class expressions</html>";
-	private static final String SUPER_CLASS_LEARNING_STRING = "<html>suggest super class expressions</html>";
 	private static JOptionPane optionPane;
 	
 	private BackgroundTask learningTask;
@@ -138,7 +128,7 @@ public class ActionHandler implements ActionListener {
 	private void onAddAxiom() {
 		EvaluatedDescription selectedSuggestion = view.getSuggestClassPanel().getSelectedSuggestion();
 		Manager.getInstance().addAxiom(selectedSuggestion);
-		String message = "<html><font size=\"3\">class expression added</font></html>";
+		String message = "<html><font size=\"3\">axiom successfully added to ontology</font></html>";
 		view.setHintMessage(message);
 		view.setHelpButtonVisible(false);
 	}
@@ -191,14 +181,10 @@ public class ActionHandler implements ActionListener {
 			Manager manager = Manager.getInstance();
 
 			try {
-				if(view.getAxiomType().equals(AxiomType.EQUIVALENT_CLASSES) || view.getAxiomType().equals(AxiomType.SUBCLASS_OF)) {
+				if (view.getAxiomType().equals(AxiomType.EQUIVALENT_CLASSES) ||
+						view.getAxiomType().equals(AxiomType.SUBCLASS_OF)) {
 					// show message for preparation start
-					SwingUtilities.invokeLater(new Runnable() {
-						@Override
-						public void run() {
-							view.setBusyTaskStarted("Preparing ...");
-						}
-					});
+					SwingUtilities.invokeLater(() -> view.setBusyTaskStarted("Preparing ..."));
 
 					// init the learning problem
 					manager.initLearningProblem();
@@ -206,29 +192,27 @@ public class ActionHandler implements ActionListener {
 					// init the learning algorithm
 					manager.initLearningAlgorithm();
 
-					SwingUtilities.invokeLater(new Runnable() {
-						@Override
-						public void run() {
-							// show end of preparation
-							view.setBusyTaskEnded();
+					SwingUtilities.invokeLater(() -> {
+						// show end of preparation
+						view.setBusyTaskEnded();
 
-							// show learning has been started
-							view.setLearningStarted();
-							view.showHorizontalExpansionMessage(Manager.getInstance().getMinimumHorizontalExpansion(),
-									Manager.getInstance().getMaximumHorizontalExpansion());
-						}
+						// show learning has been started
+						view.setLearningStarted();
+						view.showHorizontalExpansionMessage(Manager.getInstance().getMinimumHorizontalExpansion(),
+								Manager.getInstance().getMaximumHorizontalExpansion());
 					});
-					
+
 					// periodically update the table of results
 					timer = new Timer();
-					timer.schedule(new TimerTask(){
+					timer.schedule(new TimerTask() {
 						int progress = 0;
 						List<EvaluatedDescriptionClass> result;
+
 						@Override
 						public void run() {
 							progress++;
 							setProgress(progress);
-							if(!isCancelled() && Manager.getInstance().isLearning()){
+							if (!isCancelled() && Manager.getInstance().isLearning()) {
 								result = Manager.getInstance().getCurrentlyLearnedDescriptions();
 								publish(result);
 							}
@@ -238,7 +222,12 @@ public class ActionHandler implements ActionListener {
 
 					// run the learning algorithm
 					Manager.getInstance().startLearning();
-				} else { // other types of axioms
+				}
+				else if(view.getAxiomType().equals(AxiomType.OBJECT_PROPERTY_DOMAIN) || view.getAxiomType().equals(AxiomType.OBJECT_PROPERTY_RANGE)) {
+					List<EvaluatedDescriptionClass> suggestions = manager.computeGCI(view.getEntity(), view.getAxiomType());
+					view.setSuggestions(suggestions);
+			    }
+			    else { // other types of axioms
 					try {
 						List<EvaluatedAxiom<OWLAxiom>> axioms = manager.computeAxioms(view.getEntity(), view.getAxiomType());
 						view.showAxioms(axioms);
@@ -264,11 +253,13 @@ public class ActionHandler implements ActionListener {
 					timer.cancel();
 				}
 
+				// show results
 				if(view.getAxiomType().equals(AxiomType.EQUIVALENT_CLASSES) || view.getAxiomType().equals(AxiomType.SUBCLASS_OF)) {
 					List<EvaluatedDescriptionClass> result = Manager.getInstance().getCurrentlyLearnedDescriptions();
 					updateList(result);
-					
 				}
+
+				// show that leaning has been finished
 				view.setLearningFinished();
 				setProgress(0);
 			}
@@ -288,5 +279,6 @@ public class ActionHandler implements ActionListener {
 					Manager.getInstance().getMaximumHorizontalExpansion());
 		}
 	}
-	
+
+
 }

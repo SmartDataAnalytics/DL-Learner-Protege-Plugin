@@ -13,8 +13,7 @@ import org.protege.editor.owl.ui.renderer.OWLCellRenderer;
 public class SuggestionsTable extends JXTable {
 
 	private static final long serialVersionUID = -497294373160119210L;
-	
-	private final OWLCellRenderer owlRenderer;
+
 	private final ProgressBarTableCellRenderer progressRenderer;
 	private EvaluatedDescription old;
 	
@@ -24,8 +23,8 @@ public class SuggestionsTable extends JXTable {
 		progressRenderer = new ProgressBarTableCellRenderer();
 		progressRenderer.setBackground(getBackground());
 		getColumn(0).setCellRenderer(progressRenderer);
-		
-		owlRenderer = new OWLCellRenderer(editorKit, false, false);
+
+		OWLCellRenderer owlRenderer = new OWLCellRenderer(editorKit, false, false);
 		owlRenderer.setHighlightKeywords(true);
 		owlRenderer.setHighlightUnsatisfiableClasses(false);
 		owlRenderer.setHighlightUnsatisfiableProperties(false);
@@ -34,12 +33,7 @@ public class SuggestionsTable extends JXTable {
 		
 		setColumnSizes();
 		
-		Comparator<Integer> comparator = new Comparator<Integer>() {
-			@Override
-			public int compare(Integer o1, Integer o2) {
-				return o1.compareTo(o2);
-			}
-		};
+		Comparator<Integer> comparator = Integer::compareTo;
 		getColumnExt(0).setComparator(comparator);
 		
 		

@@ -40,14 +40,53 @@
 		</dependency>
 		<dependency>
 			<groupId>org.apache.jena</groupId>
+			<artifactId>jena-base</artifactId>
+			<version>${jena.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.jena</groupId>
 			<artifactId>jena-arq</artifactId>
 			<version>${jena.version}</version>
 		</dependency>
-
+		<dependency>
+			<groupId>org.apache.jena</groupId>
+			<artifactId>jena-shaded-guava</artifactId>
+			<version>${jena.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>xerces</groupId>
 			<artifactId>xercesImpl</artifactId>
 			<version>2.11.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.thrift</groupId>
+			<artifactId>libthrift</artifactId>
+			<version>0.10.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient-cache</artifactId>
+			<version>4.5.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient-osgi</artifactId>
+			<version>4.5.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpcore</artifactId>
+			<version>4.4.6</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.jsonld-java</groupId>
+			<artifactId>jsonld-java</artifactId>
+			<version>0.11.1</version>
 		</dependency>
 
 
@@ -87,6 +126,7 @@
 			<groupId>org.apache.felix</groupId>
 			<artifactId>org.apache.felix.main</artifactId>
 			<version>4.4.1</version>
+			<scope>provided</scope>
 		</dependency>
 
 
@@ -191,13 +231,13 @@
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
-						<Bundle-Activator>org.protege.editor.owl.ProtegeOWL</Bundle-Activator>
+						<!--<Bundle-Activator>org.protege.editor.owl.ProtegeOWL</Bundle-Activator>-->
 						<Bundle-ClassPath>.</Bundle-ClassPath>
 						<Bundle-SymbolicName>${project.artifactId};singleton:=true</Bundle-SymbolicName>
 						<Bundle-Vendor>DL-Learner Project</Bundle-Vendor>
 						<Import-Package>
 							javax.swing,
-							org.apache.commons.lang3.*,
+							<!--org.apache.commons.lang3.*,-->
 							javax.swing.border,javax.swing.plaf.basic,org.w3c.dom,javax.xml.datatype,org.xml.sax.*,
 							javax.swing.event,javax.swing.filechooser,javax.swing.plaf,
 							javax.swing.plaf.metal,javax.swing.plaf.multi,javax.swing.plaf.synth,javax.swing.table,
@@ -233,12 +273,16 @@
 							*;resolution:=optional
 						</Import-Package>
 						
-						<!-- embed all compile and runtime scope dependencies -->
+						 embed all compile and runtime scope dependencies
 						<Embed-Dependency>components-core,swingx-core,joda-time,
 							commons-lang3,
 							log4j,jamon,pellet-owlapiv3,
 						json,owlapi-api,slf4j-api,slf4j-simple,
-						jena-arq,jena-core,jena-iri,jena-sparql-api-core,jena-sparql-api-cache-h2,xercesImpl;scope=compile|runtime</Embed-Dependency>
+						jena-arq,jena-core,jena-iri,jena-base,jena-shaded-guava,jena-osgi,
+							libthrift,httpclient-osgi,httpclient-cache,jsonld-java,httpcore,commons-logging,
+							jena-sparql-api-core,jena-sparql-api-cache-h2,xercesImpl;
+					</Embed-Dependency>
+						<!--<Embed-Dependency>*;scope=!provided;type=!pom</Embed-Dependency>-->
 						<Embed-Directory>lib</Embed-Directory>
 						<Embed-Transitive>true</Embed-Transitive>
 					</instructions>
@@ -271,6 +315,7 @@
 							<overWriteIfNewer>true</overWriteIfNewer>
 							<excludeTransitive>true</excludeTransitive>
 							<stripVersion>true</stripVersion>
+							<excludeScope>provided</excludeScope>
 						</configuration>
 					</execution>
 				</executions>
@@ -284,6 +329,23 @@
 					<target>${compiler.version}</target>
 					<encoding>${project.build.sourceEncoding}</encoding>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>1.7</version>
+				<executions>
+					<execution>
+						<phase>validate</phase>
+						<id>parse-version</id>
+						<goals>
+							<goal>parse-version</goal>
+						</goals>
+						<configuration>
+							<propertyPrefix>parsedVersion</propertyPrefix>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

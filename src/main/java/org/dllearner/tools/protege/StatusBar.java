@@ -2,10 +2,9 @@ package org.dllearner.tools.protege;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Objects;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -15,11 +14,10 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 import org.semanticweb.owlapi.reasoner.ReasonerProgressMonitor;
+import org.semanticweb.owlapi.util.ProgressMonitor;
 
-public class StatusBar extends JPanel implements PropertyChangeListener, ReasonerProgressMonitor {
-	/**
-	 * 
-	 */
+public class StatusBar extends JPanel implements PropertyChangeListener, ReasonerProgressMonitor, ProgressMonitor {
+
 	private static final long serialVersionUID = 1L;
 	private JLabel infoLabel;
 	private JProgressBar progressBar;
@@ -29,8 +27,6 @@ public class StatusBar extends JPanel implements PropertyChangeListener, Reasone
 	private boolean indeterminate;
 
 	private static final int CANCEL_TIMEOUT_MS = 5000;
-
-	private Timer cancelTimeout;
 
 	private int progress;
 	private String progressTitle;
@@ -54,29 +50,21 @@ public class StatusBar extends JPanel implements PropertyChangeListener, Reasone
 //		add(rightPanel, BorderLayout.EAST);
 //		setBackground(SystemColor.control);
 
-		cancelTimeout = new Timer(CANCEL_TIMEOUT_MS, new ActionListener() {
-			public void actionPerformed(ActionEvent event) {
-				
-			}
+		Timer cancelTimeout = new Timer(CANCEL_TIMEOUT_MS, event -> {
+
 		});
 		cancelTimeout.setRepeats(false);
 	}
 
-	public void setMessage(String message) {
-		infoLabel.setText(message);
+	@Override
+	public boolean isCancelled() {
+		return false;
 	}
 
 	public void showProgress(boolean b) {
 		cancelled = false;
 		indeterminate = b;
-		SwingUtilities.invokeLater(new Runnable() {
-
-			@Override
-			public void run() {
-				progressBar.setIndeterminate(indeterminate);
-
-			}
-		});
+		SwingUtilities.invokeLater(() -> progressBar.setIndeterminate(indeterminate));
 	}
 
 	public void setMaximumValue(int max) {
@@ -85,11 +73,10 @@ public class StatusBar extends JPanel implements PropertyChangeListener, Reasone
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-		if ("progress" == evt.getPropertyName()) {
+		if (Objects.equals("progress", evt.getPropertyName())) {
 			int progress = (Integer) evt.getNewValue();
 			setProgress(progress);
 		}
-
 	}
 
 	public boolean isCanceled() {
@@ -98,28 +85,20 @@ public class StatusBar extends JPanel implements PropertyChangeListener, Reasone
 
 	public void setProgress(int progr) {
 		this.progress = progr;
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				progressBar.setValue((int) progress);
-			}
-		});
+		SwingUtilities.invokeLater(() -> progressBar.setValue(progress));
 
 	}
 
 	public void setProgressTitle(String title) {
 		this.progressTitle = title;
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				infoLabel.setText(progressTitle + "...");
-			}
-		});
-
+		setMessage(progressTitle + "...");
 	}
+
+	// methods from interface ReasonerProgressMonitor
 
 	@Override
 	public void reasonerTaskBusy() {
-		// TODO Auto-generated method stub
-		
+		progressBar.setIndeterminate(true);
 	}
 
 	@Override
@@ -136,8 +115,46 @@ public class StatusBar extends JPanel implements PropertyChangeListener, Reasone
 
 	@Override
 	public void reasonerTaskStopped() {
+		progressBar.setIndeterminate(false);
 		setMessage("");
 		setProgress(0);
 	}
+
+
+	// methods from interface ProgressMonitor
+	@Override
+	public void setStarted() {
+
+	}
+
+	@Override
+	public void setSize(long size) {
+
+	}
+
+	@Override
+	public void setProgress(long progress) {
+		this.progress = (int) progress;
+		SwingUtilities.invokeLater(() -> progressBar.setValue((int) progress));
+
+
+	}
+
+	public void setMessage(String message) {
+		SwingUtilities.invokeLater(() -> infoLabel.setText(message));
+	}
+
+	@Override
+	public void setIndeterminate(boolean b) {
+		progressBar.setIndeterminate(b);
+	}
+
+	@Override
+	public void setFinished() {
+		progressBar.setIndeterminate(false);
+		setMessage("");
+		setProgress(0);
+	}
+
 
 }

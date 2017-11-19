@@ -17,4 +17,12 @@ public class NoInstanceDataException extends Throwable {
 		this.entity = entity;
 		this.axiomType = axiomType;
 	}
+
+	public OWLEntity getEntity() {
+		return entity;
+	}
+
+	public AxiomType getAxiomType() {
+		return axiomType;
+	}
 }

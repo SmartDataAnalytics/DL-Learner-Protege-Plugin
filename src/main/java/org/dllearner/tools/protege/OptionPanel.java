@@ -39,7 +39,6 @@ import javax.swing.JSlider;
  */
 public class OptionPanel extends JPanel {
 
-	
 	private static final long serialVersionUID = 2190682281812478244L;
 	
 	private final JSlider noiseInPercentage;
@@ -59,14 +58,7 @@ public class OptionPanel extends JPanel {
 	private JComboBox cardinalityLimitBox;
 	
 	private JPanel profilePanel;
-	private JPanel radioBoxPanel;
-	private JPanel checkBoxPanel;
-	private JPanel labelPanel;
-	private JPanel sliderPanel;
-	
-	private OptionPanelHandler optionHandler;
-	private double accuracy;
-	
+
 	/**
 	 * Constructor for the Option Panel. 
 	 */
@@ -75,16 +67,16 @@ public class OptionPanel extends JPanel {
 		setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5), 
 				BorderFactory.createTitledBorder("Options")));
 		setLayout(new BorderLayout());
-		optionHandler = new OptionPanelHandler(this);
-		labelPanel = new JPanel();
+		OptionPanelHandler optionHandler = new OptionPanelHandler(this);
+		JPanel labelPanel = new JPanel();
 		labelPanel.setLayout(new GridLayout(0, 1));
-		sliderPanel = new JPanel();
+		JPanel sliderPanel = new JPanel();
 		sliderPanel.setLayout(new GridLayout(0, 1));
 		profilePanel = new JPanel();
 		profilePanel.setLayout(new GridLayout(0, 1));
-		radioBoxPanel = new JPanel();
+		JPanel radioBoxPanel = new JPanel();
 		radioBoxPanel.setLayout(new FlowLayout());
-		checkBoxPanel = new JPanel();
+		JPanel checkBoxPanel = new JPanel();
 		checkBoxPanel.setLayout(new GridBagLayout());
 		
 		JLabel noiseInPercentageLabel = new JLabel("<html>noise in %:    </html>");
@@ -217,7 +209,7 @@ public class OptionPanel extends JPanel {
 	 */
 	public double getNoise() {
 		double acc = noiseInPercentage.getValue();
-		accuracy = (acc/100.0);
+		double accuracy = (acc / 100.0);
 		return accuracy;
 	}
 	

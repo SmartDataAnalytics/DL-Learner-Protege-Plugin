@@ -1,13 +1,10 @@
 package org.dllearner.tools.protege;
 
 import org.dllearner.core.EvaluatedAxiom;
-import org.dllearner.learningproblems.EvaluatedDescriptionClass;
 import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLClassExpression;
 
 import javax.swing.*;
 import java.util.List;
-import java.util.Optional;
 
 public class OWLAxiomHypothesesTableModel extends AbstractHypothesesTableModel<EvaluatedAxiom> {
 
@@ -33,7 +30,7 @@ public class OWLAxiomHypothesesTableModel extends AbstractHypothesesTableModel<E
 	}
 	
 	@Override
-	public Class<? extends Object> getColumnClass(int columnIndex) {
+	public Class<?> getColumnClass(int columnIndex) {
 		switch (columnIndex) {
 		case 0:
 			return String.class;

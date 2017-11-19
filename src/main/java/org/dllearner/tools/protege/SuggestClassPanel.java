@@ -26,7 +26,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import org.dllearner.core.EvaluatedDescription;
-import org.dllearner.learningproblems.EvaluatedDescriptionClass;
 import org.protege.editor.owl.OWLEditorKit;
 
 /**
@@ -44,12 +43,6 @@ public class SuggestClassPanel extends JPanel {
 
 	private final JScrollPane suggestScroll;
 
-	/**
-	 * This is the constructor for the suggest panel. It creates a new Scroll
-	 * panel and puts the Suggest List in it.
-	 * @param m model of the DL-Learner
-	 * @param v view of the DL-Learner
-	 */
 	public SuggestClassPanel(OWLEditorKit editorKit) {
 		super();
 		this.setLayout(new BorderLayout());

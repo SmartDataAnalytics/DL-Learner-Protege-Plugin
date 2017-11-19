@@ -9,6 +9,7 @@ import org.dllearner.kb.OWLAPIOntology;
 import org.dllearner.kb.SparqlEndpointKS;
 import org.dllearner.learningproblems.ClassLearningProblem;
 import org.dllearner.learningproblems.EvaluatedDescriptionClass;
+import org.dllearner.learningproblems.PosOnlyLP;
 import org.dllearner.reasoning.ClosedWorldReasoner;
 import org.dllearner.reasoning.OWLAPIReasoner;
 import org.dllearner.refinementoperators.RhoDRDown;
@@ -25,6 +26,7 @@ import org.semanticweb.owlapi.model.parameters.Imports;
 import org.semanticweb.owlapi.reasoner.Node;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.ReasonerProgressMonitor;
+import org.semanticweb.owlapi.util.ProgressMonitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,7 +70,29 @@ public class Manager implements OWLModelManagerListener, OWLSelectionModelListen
 	private AbstractAxiomLearningAlgorithm alg;
 	private OWLEntity entity;
 	private AxiomType axiomType;
-	
+
+	private List<ProgressMonitor> progressMonitors = new ArrayList<>();
+
+	public boolean addProgressMonitor(ProgressMonitor progressMonitor) {
+		return this.progressMonitors.add(progressMonitor);
+	}
+
+	public boolean removeProgressMonitor(ProgressMonitor progressMonitor) {
+		return this.progressMonitors.remove(progressMonitor);
+	}
+
+	private void fireProgressStatusChanged(String message) {
+		progressMonitors.forEach(mon -> mon.setMessage(message));
+	}
+
+	private void fireTaskStarted() {
+		progressMonitors.forEach(ProgressMonitor::setStarted);
+	}
+
+	private void fireTaskFinished() {
+		progressMonitors.forEach(ProgressMonitor::setFinished);
+	}
+
 	public static synchronized Manager getInstance(OWLEditorKit editorKit){
 		if(instance == null){
 			instance = new Manager(editorKit);
@@ -136,10 +160,14 @@ public class Manager implements OWLModelManagerListener, OWLSelectionModelListen
 					.count();
 
 		} else if(entity.isOWLDataProperty()) {
-			for(Node<OWLDataProperty> node : reasoner.getSubDataProperties(entity.asOWLDataProperty(), false)) {
-				instanceDataCnt += ontology.getAxioms(node.getRepresentativeElement(), Imports.INCLUDED).stream().filter(axiom -> axiom.isOfType(AxiomType.DATA_PROPERTY_ASSERTION)).count();
-			}
+			instanceDataCnt = reasoner.getSubDataProperties(entity.asOWLDataProperty(), false).getNodes().stream()
+					.mapToLong(node ->
+							ontology.getAxioms(node.getRepresentativeElement(), Imports.INCLUDED).stream()
+									.filter(axiom -> axiom.isOfType(AxiomType.DATA_PROPERTY_ASSERTION))
+									.count()
+			).sum();
 		}
+		System.out.println("#INSTANCE DATA for entity " + entity + " : " + instanceDataCnt);
 
 		if(instanceDataCnt <= 3) {
 			throw new NoInstanceDataException(entity, axiomType);
@@ -147,8 +175,64 @@ public class Manager implements OWLModelManagerListener, OWLSelectionModelListen
 
 		return true;
 	}
+
+	public <A extends OWLAxiom> List<EvaluatedDescriptionClass> computeGCI(OWLEntity entity, AxiomType<A> axiomType) {
+		OWLDataFactory df = editorKit.getOWLModelManager().getOWLDataFactory();
+
+		OWLClassExpression ce;
+		if (axiomType.equals(AxiomType.OBJECT_PROPERTY_DOMAIN)) {
+			ce = df.getOWLObjectSomeValuesFrom(entity.asOWLObjectProperty(), df.getOWLThing());
+		} else if (axiomType.equals(AxiomType.DATA_PROPERTY_DOMAIN)) {
+			ce = df.getOWLDataSomeValuesFrom(entity.asOWLDataProperty(), df.getTopDatatype());
+		} else if (axiomType.equals(AxiomType.OBJECT_PROPERTY_RANGE)) {
+			ce = df.getOWLObjectSomeValuesFrom(entity.asOWLObjectProperty().getInverseProperty(), df.getOWLThing());
+		} else {
+			throw new IllegalArgumentException("Unsupported axiom type " + axiomType.getName());
+		}
+
+		try {
+//			initKnowledgeSource();
+//
+//			initReasoner();
+
+			PosOnlyLP lp = new PosOnlyLP(reasoner);
+			lp.setPositiveExamples(reasoner.getIndividualsImpl(ce));
+//			ClassExpressionLearningProblem lp = new ClassExpressionLearningProblem(reasoner);
+//			lp.setClassExpressionToDescribe(ce);
+			lp.init();
+
+			la = new CELOE(lp, reasoner);
+
+			RhoDRDown op = new RhoDRDown();
+			op.setReasoner(reasoner);
+			op.setUseNegation(useNegation);
+			op.setUseHasValueConstructor(useAllConstructor);
+			op.setUseCardinalityRestrictions(useCardinalityRestrictions);
+			if(useCardinalityRestrictions){
+				op.setCardinalityLimit(cardinalityLimit);
+			}
+			op.setUseExistsConstructor(useExistsConstructor);
+			op.setUseHasValueConstructor(useHasValueConstructor);
+			op.init();
+
+			la.setOperator(op);
+
+			la.setMaxExecutionTimeInSeconds(maxExecutionTimeInSeconds);
+			la.setNoisePercentage(noisePercentage);
+			la.setMaxNrOfResults(maxNrOfResults);
+
+			la.init();
+
+			la.start();
+
+			return getCurrentlyLearnedDescriptions();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 	
-	public List<EvaluatedAxiom<OWLAxiom>> computeAxioms(OWLEntity entity, AxiomType axiomType) throws NoInstanceDataException {
+	public <A extends OWLAxiom> List<EvaluatedAxiom<A>> computeAxioms(OWLEntity entity, AxiomType<A> axiomType) throws NoInstanceDataException {
 		OWLOntology ontology = editorKit.getWorkspace().getOWLModelManager().getActiveOntology();
 		OWLReasoner reasoner = editorKit.getOWLModelManager().getReasoner();
 
@@ -161,7 +245,10 @@ public class Manager implements OWLModelManagerListener, OWLSelectionModelListen
 				axiomType.getName() + " axioms for " + 
 				OWLAPIUtils.getPrintName(entity.getEntityType()) 
 				+ " " + editorKit.getOWLModelManager().getRendering(entity) + "...");
-		
+		fireTaskStarted();
+		fireProgressStatusChanged("Learning " + axiomType.getName() + " axioms for "
+				+ entity.getEntityType().getPrintName().toLowerCase() + " "
+				+ editorKit.getOWLModelManager().getRendering(entity) + "...");
 		try {
 			Class<? extends AbstractAxiomLearningAlgorithm<? extends OWLAxiom, ? extends OWLObject, ? extends OWLEntity>> algorithmClass = AxiomAlgorithms.getAlgorithmClass(axiomType);
 			Model model = OwlApiJenaUtils.getModel(ontology);
@@ -173,11 +260,9 @@ public class Manager implements OWLModelManagerListener, OWLSelectionModelListen
 			alg.init();
 			alg.start();
 			LOGGER.info("done.");
+			fireTaskFinished();
 			return alg.getCurrentlyBestEvaluatedAxioms();
-		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
-				| NoSuchMethodException | SecurityException e) {
-			e.printStackTrace();
-		} catch (ComponentInitException e) {
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException | ComponentInitException e) {
 			e.printStackTrace();
 		} catch(Error e) {
 			e.printStackTrace();
@@ -263,16 +348,13 @@ public class Manager implements OWLModelManagerListener, OWLSelectionModelListen
 		reasoner.setReasonerComponent(baseReasoner);
 //		reasoner.setProgressMonitor(progressMonitor);TODO integrate progress monitor
 		
-		Thread t = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					reasoner.init();
-				} catch (ComponentInitException e) {
-					e.printStackTrace();
-				}
-			}
-		});
+		Thread t = new Thread(() -> {
+            try {
+                reasoner.init();
+            } catch (ComponentInitException e) {
+                e.printStackTrace();
+            }
+        });
 		t.start();
 	}
 	
@@ -287,20 +369,21 @@ public class Manager implements OWLModelManagerListener, OWLSelectionModelListen
 	 * @param evaluatedDescription the class expression
 	 */
 	public void addAxiom(EvaluatedDescription<? extends OWLClassExpression> evaluatedDescription){
-		OWLClass selectedClass = editorKit.getOWLWorkspace().getOWLSelectionModel().getLastSelectedClass();
-		
 		OWLDataFactory df = editorKit.getOWLModelManager().getOWLDataFactory();
+
 		OWLAxiom axiom = null;
+		OWLClassExpression ce = evaluatedDescription.getDescription();
+
 		if(axiomType.equals(SUBCLASS_OF)) {
-			axiom = df.getOWLSubClassOfAxiom(selectedClass, evaluatedDescription.getDescription());
+			axiom = df.getOWLSubClassOfAxiom(entity.asOWLClass(), ce);
 		} else if(axiomType.equals(EQUIVALENT_CLASSES)) {
-			axiom = df.getOWLEquivalentClassesAxiom(selectedClass, evaluatedDescription.getDescription());
+			axiom = df.getOWLEquivalentClassesAxiom(entity.asOWLClass(), ce);
 		} else if(axiomType.equals(OBJECT_PROPERTY_DOMAIN)) {
-			axiom = df.getOWLObjectPropertyDomainAxiom(entity.asOWLObjectProperty(), selectedClass);
+			axiom = df.getOWLObjectPropertyDomainAxiom(entity.asOWLObjectProperty(), ce);
 		} else if(axiomType.equals(OBJECT_PROPERTY_RANGE)) {
-			axiom = df.getOWLObjectPropertyRangeAxiom(entity.asOWLObjectProperty(), selectedClass);
+			axiom = df.getOWLObjectPropertyRangeAxiom(entity.asOWLObjectProperty(), ce);
 		} else if(axiomType.equals(DATA_PROPERTY_DOMAIN)) {
-			axiom = df.getOWLDataPropertyDomainAxiom(entity.asOWLDataProperty(), selectedClass);
+			axiom = df.getOWLDataPropertyDomainAxiom(entity.asOWLDataProperty(), ce);
 		}
 
 		editorKit.getOWLModelManager().applyChange(new AddAxiom(editorKit.getOWLModelManager().getActiveOntology(), axiom));
@@ -421,21 +504,28 @@ public class Manager implements OWLModelManagerListener, OWLSelectionModelListen
 	public boolean canLearn(){
 		// get the selected entity
 		OWLEntity entity = editorKit.getOWLWorkspace().getOWLSelectionModel().getSelectedEntity();
-		
-		// check if number of examples is above min number
-		if(entity.isOWLClass()) {
-			return reasoner.getIndividuals(entity.asOWLClass()).size() > MIN_NR_OF_INDIVIDUALS;
-		} else if(entity.isOWLObjectProperty()) {
-			return reasoner.getPropertyMembers(entity.asOWLObjectProperty()).size() > MIN_NR_OF_INDIVIDUALS;
-		} else if(entity.isOWLDataProperty()) {
-			return reasoner.getDatatypeMembers(entity.asOWLDataProperty()).size() > MIN_NR_OF_INDIVIDUALS;
+
+		if(entity != null) {
+			// get size of instance data
+			int size = 0;
+			if(entity.isOWLClass()) {
+				size = reasoner.getIndividuals(entity.asOWLClass()).size();
+			} else if(entity.isOWLObjectProperty()) {
+				size = reasoner.getPropertyMembers(entity.asOWLObjectProperty()).size();
+			} else if(entity.isOWLDataProperty()) {
+				size = reasoner.getDatatypeMembers(entity.asOWLDataProperty()).size();
+			}
+			System.out.println(entity + " : " + size);
+			LOGGER.info("#facts for entity {}:{}", entity, size);
+
+			return size > MIN_NR_OF_INDIVIDUALS;
 		}
+
 		return false;
 	}
 	
 	public String getRendering(OWLObject owlObject){
-		String rendering = editorKit.getModelManager().getRendering(owlObject);
-		return rendering;
+		return editorKit.getModelManager().getRendering(owlObject);
 	}
 	
 	public ClosedWorldReasoner getReasoner(){

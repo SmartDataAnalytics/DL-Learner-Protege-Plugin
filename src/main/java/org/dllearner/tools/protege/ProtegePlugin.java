@@ -22,7 +22,7 @@ package org.dllearner.tools.protege;
 import java.util.Collections;
 import java.util.Set;
 
-import javax.swing.JComponent;
+import javax.swing.*;
 
 import org.dllearner.utilities.owl.DLSyntaxObjectRenderer;
 import org.protege.editor.core.ui.util.InputVerificationStatusChangedListener;
@@ -31,6 +31,7 @@ import org.protege.editor.owl.model.event.OWLModelManagerChangeEvent;
 import org.protege.editor.owl.model.event.OWLModelManagerListener;
 import org.protege.editor.owl.model.inference.OWLReasonerManager;
 import org.protege.editor.owl.model.inference.ReasonerStatus;
+import org.protege.editor.owl.model.selection.OWLSelectionModelListener;
 import org.protege.editor.owl.ui.editor.AbstractOWLClassExpressionEditor;
 import org.semanticweb.owlapi.io.ToStringRenderer;
 import org.semanticweb.owlapi.model.AxiomType;
@@ -45,7 +46,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
  * @author Christian Koetteritzsch
  * 
  */
-public class ProtegePlugin extends AbstractOWLClassExpressionEditor implements OWLModelManagerListener{
+public class ProtegePlugin extends AbstractOWLClassExpressionEditor implements OWLModelManagerListener, OWLSelectionModelListener {
 	private DLLearnerView view;
 	
 	@Override
@@ -76,23 +77,23 @@ public class ProtegePlugin extends AbstractOWLClassExpressionEditor implements O
         ReasonerStatus status = reasonerManager.getReasonerStatus();
         boolean enable = true;
         String message = "";
-        if(status == ReasonerStatus.INITIALIZED){
-        	if(status == ReasonerStatus.INCONSISTENT){
-            	message = "The loaded ontology is inconsistent. Learning is only supported for consistent ontologies.";
-            	enable = false;
-            }
-        } else if(status == ReasonerStatus.OUT_OF_SYNC){
-        	message = "You have to synchronize the reasoner first(click on menu \"Reasoner\"->\"Synchronize reasoner\").";
-        	enable = false;
-        } else {
-        	message = "You have to select a reasoner first(click on menu \"Reasoner\"). ";
-        	enable = false;
-        }
-        view.setHintMessage("<html><font size=\"3\" color=\"red\">" + message + "</font></html>");
+		if (status == ReasonerStatus.INCONSISTENT) {
+			message = "The loaded ontology is inconsistent. Learning is only supported for consistent ontologies.";
+			enable = false;
+		} else if (status == ReasonerStatus.OUT_OF_SYNC) {
+			message = "You have to synchronize the reasoner first(click on menu \"Reasoner\"->\"Synchronize reasoner\").";
+			enable = false;
+		} else if (status == ReasonerStatus.REASONER_NOT_INITIALIZED) {
+			message = "You have to select a reasoner first(click on menu \"Reasoner\"). ";
+			enable = false;
+		}
+		view.setHintMessage("<html><font size=\"3\" color=\"red\">" + message + "</font></html>");
 		view.setRunButtonEnabled(enable);
+
 		if(enable){
 			if(!Manager.getInstance().isPreparing() && Manager.getInstance().isReinitNecessary()){
-				new ReadingOntologyThread(view).start();
+				new DLLearnerBackgroundTaskDialog(view).run();
+//				new ReadingOntologyThread(view).start();
 			}
 		}
 	}
@@ -116,6 +117,7 @@ public class ProtegePlugin extends AbstractOWLClassExpressionEditor implements O
 				getAxiomType());
 
 		manager.setProgressMonitor(view.getStatusBar());
+		manager.addProgressMonitor(view);
 
 		OWLEntity entity = getOWLEditorKit().getOWLWorkspace().getOWLSelectionModel().getSelectedEntity();
 		manager.setEntity(entity);
@@ -129,7 +131,7 @@ public class ProtegePlugin extends AbstractOWLClassExpressionEditor implements O
 	@Override
 	public void dispose() throws Exception {
 		view.dispose();
-		Manager.getInstance().dispose();
+		Manager.getInstance(getOWLEditorKit()).dispose();
 		removeListeners();
 		view = null;
 	}
@@ -144,12 +146,14 @@ public class ProtegePlugin extends AbstractOWLClassExpressionEditor implements O
 		getOWLEditorKit().getOWLModelManager().addListener(this);
 		getOWLEditorKit().getOWLModelManager().addListener(Manager.getInstance(getOWLEditorKit()));
 		getOWLEditorKit().getOWLWorkspace().getOWLSelectionModel().addListener(Manager.getInstance(getOWLEditorKit()));
+		getOWLEditorKit().getOWLWorkspace().getOWLSelectionModel().addListener(this);
 	}
 	
 	private void removeListeners(){
 		getOWLEditorKit().getOWLModelManager().removeListener(this);
 		getOWLEditorKit().getOWLModelManager().removeListener(Manager.getInstance(getOWLEditorKit()));
 		getOWLEditorKit().getOWLWorkspace().getOWLSelectionModel().removeListener(Manager.getInstance(getOWLEditorKit()));
+		getOWLEditorKit().getOWLWorkspace().getOWLSelectionModel().removeListener(this);
 	}
 
 	@Override
@@ -160,5 +164,10 @@ public class ProtegePlugin extends AbstractOWLClassExpressionEditor implements O
 				checkReasonerStatus();
 			}
         }
+	}
+
+	@Override
+	public void selectionChanged() throws Exception {
+		view.setEntity(getOWLEditorKit().getOWLWorkspace().getOWLSelectionModel().getSelectedEntity());
 	}
 }

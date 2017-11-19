@@ -21,7 +21,7 @@ public class SuggestionsTableModel extends AbstractTableModel {
 	
 	public SuggestionsTableModel(){
 		super();
-		suggestionList = new ArrayList<EvaluatedDescription>();
+		suggestionList = new ArrayList<>();
 	}
 	
 	public SuggestionsTableModel(List<EvaluatedDescription> suggestionList){
@@ -63,7 +63,7 @@ public class SuggestionsTableModel extends AbstractTableModel {
 	}
 	
 	@Override
-	public Class<? extends Object> getColumnClass(int columnIndex) {
+	public Class<?> getColumnClass(int columnIndex) {
 		switch (columnIndex) {
 		case 0:
 			return String.class;

@@ -58,7 +58,7 @@ public class GraphicalCoverageTextField extends JTextPane{
 		int additionalInstancesCount = ((EvaluatedDescriptionClass) description).getAdditionalInstances().size();
 		int coverage = (int)(((EvaluatedDescriptionClass) description).getCoverage() * 100);
 		             
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		sb.append("<html><p><font size=\"3\" color=\"yellow\">\u25cf</font><font size=\"3\" color=\"black\"> ");
 		sb.append(oldConceptRendered);
 		sb.append("</font></p>");

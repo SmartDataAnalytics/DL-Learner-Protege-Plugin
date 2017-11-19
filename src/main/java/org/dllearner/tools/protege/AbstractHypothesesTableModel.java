@@ -14,7 +14,7 @@ public class AbstractHypothesesTableModel<T extends EvaluatedHypothesis> extends
 
 	private static final long serialVersionUID = -6920806148989403795L;
 
-	protected List<T> hypotheses = new ArrayList<T>();
+	protected List<T> hypotheses = new ArrayList<>();
 
 	private final Icon inconsistentIcon = new ImageIcon(this.getClass().getResource("warning-icon.png"));
 	private final Icon followsIcon = new ModelsIcon();
@@ -58,7 +58,7 @@ public class AbstractHypothesesTableModel<T extends EvaluatedHypothesis> extends
 	}
 	
 	@Override
-	public Class<? extends Object> getColumnClass(int columnIndex) {
+	public Class<?> getColumnClass(int columnIndex) {
 		switch (columnIndex) {
 		case 0:
 			return String.class;

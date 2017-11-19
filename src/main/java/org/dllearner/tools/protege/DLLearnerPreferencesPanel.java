@@ -17,7 +17,7 @@ public class DLLearnerPreferencesPanel extends OWLPreferencesPanel{
 
     private static final long serialVersionUID = -943293597478204971L;
 
-    private java.util.List<OWLPreferencesPanel> optionPages = new ArrayList<OWLPreferencesPanel>();
+    private java.util.List<OWLPreferencesPanel> optionPages = new ArrayList<>();
 
     private JTabbedPane tabPane;
 

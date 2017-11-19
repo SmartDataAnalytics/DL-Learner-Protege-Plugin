@@ -77,7 +77,7 @@ public class GraphicalCoveragePanelHandler implements MouseMotionListener,
 		this.panel = p;
 		description = eval;
 		ontology = Manager.getInstance().getActiveOntology();
-		individualComboBox = new Vector<String>();
+		individualComboBox = new Vector<>();
 
 	}
 	
@@ -123,32 +123,32 @@ public class GraphicalCoveragePanelHandler implements MouseMotionListener,
 					&& v.get(i).getXAxis() <= m.getX() + 5
 					&& v.get(i).getYAxis() >= m.getY() - 5
 					&& v.get(i).getYAxis() <= m.getY() + 5) {
-				String individualInformation = "<html><body><b>"
-						+ v.get(i).getIndividualName().toString() + "</b>";
+				StringBuilder individualInformation = new StringBuilder("<html><body><b>"
+						+ v.get(i).getIndividualName() + "</b>");
 				if (v.get(i).getIndividual() != null) {
 
 					Set<OWLClass> types = reasoner.getTypes(v.get(i)
 							.getIndividual());
-					individualInformation += "<br><br><b>Types:</b><br>";
+					individualInformation.append("<br><br><b>Types:</b><br>");
 					for (OWLClass dlLearnerClass : types) {
-						individualInformation += Manager.getInstance().getRendering(dlLearnerClass) + "<br>";
+						individualInformation.append(Manager.getInstance().getRendering(dlLearnerClass)).append("<br>");
 					}
 					Map<OWLObjectProperty, Set<OWLIndividual>> op2Individuals = reasoner.getObjectPropertyRelationships(v.get(i).getIndividual());
 					Set<OWLObjectProperty> key = op2Individuals.keySet();
-					individualInformation += "<br><b>Object Property Values:</b><br>";
+					individualInformation.append("<br><b>Object Property Values:</b><br>");
 					
 					for (Entry<OWLObjectProperty, Set<OWLIndividual>> entry : op2Individuals.entrySet()) {
 						OWLObjectProperty op = entry.getKey();
-						individualInformation += Manager.getInstance().getRendering(op) + " ";
+						individualInformation.append(Manager.getInstance().getRendering(op)).append(" ");
 						
 						Set<OWLIndividual> individuals = entry.getValue();
 						for (OWLIndividual ind : individuals) {
-							individualInformation += Manager.getInstance().getRendering(ind);
+							individualInformation.append(Manager.getInstance().getRendering(ind));
 							if (individuals.size() > 1) {
-								individualInformation += ", ";
+								individualInformation.append(", ");
 							}
 						}
-						individualInformation += "<br>";
+						individualInformation.append("<br>");
 						
 					}
 				
@@ -156,43 +156,38 @@ public class GraphicalCoveragePanelHandler implements MouseMotionListener,
 						Set<OWLDataPropertyAssertionAxiom> dataProperties = ontology
 								.getDataPropertyAssertionAxioms(v.get(i)
 										.getIndividual());
-						individualInformation += "<br><b>Data Property Values</b><br>";
+						individualInformation.append("<br><b>Data Property Values</b><br>");
 						for (OWLDataPropertyAssertionAxiom dataProperty : dataProperties) {
-							individualInformation += dataProperty.toString()
-									+ "<br>";
+							individualInformation.append(dataProperty.toString()).append("<br>");
 						}
 						
 						Set<OWLNegativeObjectPropertyAssertionAxiom> negObjects = ontology.getNegativeObjectPropertyAssertionAxioms(v.get(i).getIndividual());
-						individualInformation += "<br><b>negative Object Properties</b><br>";
+						individualInformation.append("<br><b>negative Object Properties</b><br>");
 						for (OWLNegativeObjectPropertyAssertionAxiom negObject : negObjects) {
-							individualInformation += negObject.toString()
-									+ "<br>";
+							individualInformation.append(negObject.toString()).append("<br>");
 						}
 						
 						Set<OWLNegativeDataPropertyAssertionAxiom> negDatas = ontology.getNegativeDataPropertyAssertionAxioms(v.get(i).getIndividual());
-						individualInformation += "<br><b>negative Dataproperties</b><br>";
+						individualInformation.append("<br><b>negative Dataproperties</b><br>");
 						for (OWLNegativeDataPropertyAssertionAxiom negData : negDatas) {
-							individualInformation += negData.toString()
-									+ "<br>";
+							individualInformation.append(negData.toString()).append("<br>");
 						}
 						Collection<OWLIndividual> sameIndies = EntitySearcher.getSameIndividuals(v.get(i).getIndividual(), ontology);
-						individualInformation += "<br><b>Same Individuals</b><br>";
+						individualInformation.append("<br><b>Same Individuals</b><br>");
 						for (OWLIndividual sameIndie : sameIndies) {
-							individualInformation += sameIndie.toString()
-									+ "<br>";
+							individualInformation.append(sameIndie.toString()).append("<br>");
 						}
 						
 						Set<OWLDifferentIndividualsAxiom> differentIndies = ontology.getDifferentIndividualAxioms(v.get(i).getIndividual());
-						individualInformation += "<br><b>Different Individuals</b><br>";
+						individualInformation.append("<br><b>Different Individuals</b><br>");
 						for (OWLDifferentIndividualsAxiom differentIndie : differentIndies) {
-							individualInformation += differentIndie.toString()
-									+ "<br>";
+							individualInformation.append(differentIndie.toString()).append("<br>");
 						}
 					}
 				}
-				individualInformation += "</body></htlm>";
+				individualInformation.append("</body></htlm>");
 				panel.getGraphicalCoveragePanel().setToolTipText(
-						individualInformation);
+						individualInformation.toString());
 			}
 		}
 	}

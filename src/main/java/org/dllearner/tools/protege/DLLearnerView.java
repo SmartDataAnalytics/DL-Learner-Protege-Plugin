@@ -24,6 +24,7 @@ import org.dllearner.core.EvaluatedDescription;
 import org.dllearner.tools.protege.ActionHandler.Actions;
 import org.protege.editor.owl.OWLEditorKit;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.util.ProgressMonitor;
 
 import javax.swing.*;
 import java.awt.*;
@@ -41,7 +42,7 @@ import static org.semanticweb.owlapi.model.AxiomType.*;
  * @author Christian Koetteritzsch
  * 
  */
-public class DLLearnerView extends JPanel{
+public class DLLearnerView extends JPanel implements ProgressMonitor {
 
 	
 	private static final  long serialVersionUID = 624829578325729385L; 
@@ -119,8 +120,8 @@ public class DLLearnerView extends JPanel{
 
 		createUI();
 	}
-	
-	
+
+
 	/**
 	 * This method returns the SuggestClassPanel.
 	 * @return SuggestClassPanel
@@ -477,10 +478,18 @@ public class DLLearnerView extends JPanel{
 					+ " searched.";
 		}
 		hint.setForeground(Color.RED);
+
 		if(isInconsistent) {
 			message +="<font size=\"3\" color=\"red\"><br>Class expressions marked red will lead to an inconsistent ontology. <br>Please click on them to view detail information.</font></html>";
-		} else {
+		} else if(axiomType.equals(EQUIVALENT_CLASSES) || axiomType.equals(SUBCLASS_OF)) {
 			message +="<br>To view details about why a class expression was suggested, please click on it.</font><html>";
+		} else {
+			int size = 10;//Manager.getInstance().getCurrentlyBestEvaluatedAxioms().size()
+			message +="<br>" + size + " candidates as "
+					+ String.join(" ", axiomType.getName().split("(?<!(^|[A-Z]))(?=[A-Z])|(?<!^)(?=[A-Z][a-z])")).toLowerCase()
+					+ " of "
+					+ editorKit.getOWLModelManager().getRendering(entity)
+					+ " have been computed.</font><html>";
 		}
 		runButton.setEnabled(true);
 		this.setHintMessage(message);
@@ -550,8 +559,9 @@ public class DLLearnerView extends JPanel{
 	}
 	
 	public void setLearningFinished(){
-		statusBar.setProgress(0);
 		setBusy(false);
+		statusBar.setProgress(0);
+		showStatusBar(false);
 		showAlgorithmTerminatedMessage();
 	}
 	
@@ -560,13 +570,12 @@ public class DLLearnerView extends JPanel{
 	}
 	
 	public void showHorizontalExpansionMessage(int min, int max){
-		StringBuffer sb = new StringBuffer();
-		sb.append("<html><font size=\"3\">Currently searching class expressions with length between ");
-		sb.append(min);
-		sb.append(" and ");
-		sb.append(max);
-		sb.append(".</font></html>");
-		setHintMessage(sb.toString());
+		String sb = "<html><font size=\"3\">Currently searching class expressions with length between " +
+				min +
+				" and " +
+				max +
+				".</font></html>";
+		setHintMessage(sb);
 	}
 	
 	public void setSuggestions(List<? extends EvaluatedDescription> suggestions){
@@ -576,10 +585,11 @@ public class DLLearnerView extends JPanel{
 	public void showNoInstanceDataWarning() {
 		setHintMessage("<html><font color=\"red\">There is not enough instance data available to learn any axiom.</font></html>");
 	}
-	
+
+	@SuppressWarnings("unchecked")
 	public void showAxioms(List<EvaluatedAxiom<OWLAxiom>> evaluatedAxioms){
 		// currently we just convert axioms to descriptions
-		List<EvaluatedDescription> evaluatedDescriptions = new ArrayList<EvaluatedDescription>(evaluatedAxioms.size());
+		List<EvaluatedDescription> evaluatedDescriptions = new ArrayList<>(evaluatedAxioms.size());
 		for (EvaluatedAxiom<OWLAxiom> evaluatedAxiom : evaluatedAxioms) {
 			if(axiomType.equals(OBJECT_PROPERTY_DOMAIN)) {
 				evaluatedDescriptions.add(
@@ -598,8 +608,50 @@ public class DLLearnerView extends JPanel{
 								evaluatedAxiom.getScore()));
 			}
 		}
-		Collections.sort(evaluatedDescriptions, Collections.reverseOrder());
+		evaluatedDescriptions.sort(Collections.reverseOrder());
 		sugPanel.setSuggestions(evaluatedDescriptions);
 	}
-	
+
+	public void setEntity(OWLEntity entity) {
+		this.entity = entity;
+	}
+
+	@Override
+	public void setStarted() {
+		setBusyTaskStarted("");
+	}
+
+	@Override
+	public void setSize(long size) {
+		statusBar.setMaximumValue((int)size);
+	}
+
+	@Override
+	public void setProgress(long progress) {
+		statusBar.setProgress((int)progress);
+	}
+
+	@Override
+	public void setMessage(String message) {
+		statusBar.setMessage(message);
+	}
+
+	@Override
+	public void setIndeterminate(boolean b) {
+		statusBar.showProgress(true);
+	}
+
+	@Override
+	public void setFinished() {
+		setBusyTaskEnded();
+	}
+
+	@Override
+	public boolean isCancelled() {
+		return false;
+	}
+
+	public static void main(String[] args) {
+		System.out.println(String.join(" ", AxiomType.OBJECT_PROPERTY_DOMAIN.getName().split("(?<!(^|[A-Z]))(?=[A-Z])|(?<!^)(?=[A-Z][a-z])")));
+	}
 }
