@@ -233,7 +233,7 @@
 					<instructions>
 						<!--<Bundle-Activator>org.protege.editor.owl.ProtegeOWL</Bundle-Activator>-->
 						<Bundle-ClassPath>.</Bundle-ClassPath>
-						<Bundle-SymbolicName>${project.artifactId};singleton:=true</Bundle-SymbolicName>
+						<Bundle-SymbolicName>${project.groupId}.${project.artifactId};singleton:=true</Bundle-SymbolicName>
 						<Bundle-Vendor>DL-Learner Project</Bundle-Vendor>
 						<Import-Package>
 							javax.swing,
